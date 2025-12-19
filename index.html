@@ -2,227 +2,345 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CVD Diamond Worker Salary Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CVD Diamond Manager Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
+            /* --- COLORS --- */
+            --bg-color: #f4f7f6;
+            --container-bg: #ffffff;
+            --text-color: #333333;
             --primary: #0056b3;
-            --light: #f4f7f6;
-            --dark: #333;
             --border: #ddd;
+            --input-bg: #ffffff;
+            --table-header: #0056b3;
+            --row-even: #f9f9f9;
+            --modal-bg: white;
+            --shadow: rgba(0,0,0,0.1);
+            --btn-bg: #f8f9fa;
+            /* Highlights */
+            --comm-highlight: #fdf4a5; 
+            --fancy-highlight: #fbcbe7; 
+            --highlight-text: #333;
+        }
+
+        body.dark-mode {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary: #4dabf7;
+            --border: #333;
+            --input-bg: #2d2d2d;
+            --table-header: #212529;
+            --row-even: #252525;
+            --modal-bg: #1e1e1e;
+            --shadow: rgba(0,0,0,0.5);
+            --btn-bg: #2d2d2d;
+            --comm-highlight: #4a4a20; 
+            --fancy-highlight: #4a2025; 
+            --highlight-text: #fff;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light);
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
-            padding: 20px;
-            color: var(--dark);
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: white;
-            padding: 30px;
+            background: var(--container-bg);
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px var(--shadow);
+            flex: 1;
+            border: 1px solid var(--border);
+            position: relative;
         }
+
+        /* --- HEADER --- */
+        .card-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .icon-btn {
+            background-color: var(--btn-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 45px;
+            height: 45px;
+        }
+
+        .icon-btn:hover { background-color: var(--primary); color: white; border-color: var(--primary); }
+
+        .type-btn {
+            background-color: var(--input-bg);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .type-btn:hover { background-color: var(--primary); color: white; }
 
         h1 {
             text-align: center;
             color: var(--primary);
+            margin-top: 0;
             margin-bottom: 20px;
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid var(--border);
             padding-bottom: 10px;
+            font-size: 1.5rem;
         }
 
+        /* --- INPUT FORM --- */
         .input-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px; margin-bottom: 20px; background: var(--row-even);
+            padding: 15px; border-radius: 8px; border: 1px solid var(--border);
         }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-size: 0.9em;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #555;
-        }
-
+        .form-group { display: flex; flex-direction: column; }
+        label { font-size: 0.9em; font-weight: bold; margin-bottom: 5px; opacity: 0.8; }
         input, select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 5px rgba(0,86,179,0.2);
-        }
-
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.3s;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #004494;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        .total-section {
-            margin-top: 20px;
-            text-align: right;
-            font-size: 1.5em;
-            font-weight: bold;
-            color: var(--primary);
-            padding: 15px;
-            background: #eef6ff;
-            border-radius: 5px;
-        }
-
-        .delete-btn {
-            background-color: #ff4d4d;
-            padding: 5px 10px;
-            font-size: 0.8em;
-            width: auto;
-            margin: 0;
+            padding: 12px; border: 1px solid var(--border); border-radius: 6px;
+            font-size: 16px; background-color: var(--input-bg); color: var(--text-color);
         }
         
-        .delete-btn:hover {
-            background-color: #cc0000;
+        .add-btn {
+            background-color: var(--primary); color: white; border: none;
+            padding: 14px 25px; border-radius: 6px; font-size: 1rem; cursor: pointer;
+            width: 100%; margin-top: 20px; font-weight: bold;
         }
 
-        /* Status message for Rate detection */
-        #rate-display {
-            grid-column: 1 / -1;
-            font-size: 0.9em;
-            color: #666;
-            margin-top: -10px;
-            margin-bottom: 10px;
-            font-style: italic;
+        /* --- TABLE --- */
+        .table-container {
+            overflow-x: auto; margin-top: 20px; max-height: 400px;
+            overflow-y: auto; border: 1px solid var(--border); border-radius: 5px;
+        }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); color: var(--text-color); }
+        th { background-color: var(--table-header); color: white; position: sticky; top: 0; z-index: 10; }
+        tr:nth-child(even) { background-color: var(--row-even); }
+
+        /* Row Highlights */
+        tr.commercial-row { background-color: var(--comm-highlight) !important; color: var(--highlight-text); }
+        tr.fancy-row { background-color: var(--fancy-highlight) !important; color: var(--highlight-text); }
+
+        .total-section {
+            margin-top: 20px; display: flex; justify-content: space-between;
+            align-items: center; background: var(--row-even); padding: 15px;
+            border-radius: 5px; border: 1px solid var(--border);
+        }
+        .grand-total { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
+
+        /* --- BUTTONS --- */
+        .report-panel { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; }
+        .action-btn-shared { border: none; border-radius: 6px; padding: 14px 20px; font-weight: bold; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        
+        .clear-btn { background-color: transparent; color: #dc3545; border: 1px solid #dc3545; }
+        .csv-btn { background-color: #007bff; color: white; }
+        .print-btn { background-color: #28a745; color: white; }
+        .restore-btn { background-color: #6c757d; color: white; } 
+        .delete-btn { background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+
+        #rate-display { grid-column: 1 / -1; font-size: 0.9em; margin-top: -5px; margin-bottom: 5px; font-style: italic; }
+        .footer { text-align: center; margin-top: 40px; padding: 10px; opacity: 0.6; font-size: 0.8rem; border-top: 1px solid var(--border); }
+
+        @media (max-width: 600px) {
+            .report-panel { flex-direction: column-reverse; }
+            .action-btn-shared { width: 100%; flex: none; }
+            .print-btn { order: 4; } .csv-btn { order: 3; } .restore-btn { order: 2; } .clear-btn { order: 1; margin-top: 10px; border: none; color: #dc3545; }
+            .container { padding: 15px; }
+            .input-grid { grid-template-columns: 1fr 1fr; }
+            .form-group:first-child, .form-group:nth-child(4) { grid-column: 1 / -1; }
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: #888;
-            font-size: 0.9rem;
-            border-top: 1px solid #ddd;
+        /* --- MODAL --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        .modal-content { background-color: var(--modal-bg); padding: 20px; border-radius: 12px; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .modal-actions { margin-top: 25px; display: flex; flex-direction: column; gap: 10px; }
+        .save-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        .reset-btn { background: #6c757d; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; }
+        .danger-btn { background: #dc3545; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .cancel-btn { background: transparent; color: var(--text-color); border: 1px solid var(--border); padding: 12px; border-radius: 6px; cursor: pointer; }
+        .close-modal { font-size: 1.5em; cursor: pointer; background: none; border: none; color: var(--text-color); }
+
+        .type-option {
+            background: var(--input-bg); border: 2px solid var(--border);
+            padding: 15px; border-radius: 8px; text-align: center; cursor: pointer;
+            font-weight: bold; transition: 0.2s;
         }
+        .type-option:hover { border-color: var(--primary); }
+        .type-option.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* --- SETTINGS TABS --- */
+        .settings-tabs { display: flex; gap: 5px; margin-bottom: 15px; background: var(--row-even); padding: 5px; border-radius: 8px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; cursor: pointer; font-weight: bold; color: var(--text-color); border-radius: 6px; transition: 0.2s; }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        /* --- RATE TABLE GRID (FIXED) --- */
+        .rate-header-row { display: grid; gap: 8px; text-align: center; font-weight: bold; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid var(--border); font-size: 0.9em; }
+        .rate-data-row { display: grid; gap: 8px; align-items: center; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+        
+        /* Compact Inputs */
+        .rate-input { width: 100%; padding: 6px 2px; text-align: center; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text-color); font-size: 0.9rem; }
+        
+        /* Clearly Visible Size Inputs */
+        .range-cell { display: flex; flex-direction: column; gap: 4px; }
+        .range-input { 
+            width: 100%; text-align: center; font-size: 0.85em; padding: 4px; 
+            border: 1px solid #aaa; background: #f8f9fa; border-radius: 3px; color: #333; font-weight: bold;
+        }
+        body.dark-mode .range-input { background: #333; color: #fff; border-color: #555; }
+
+        .st-cell { display: flex; justify-content: center; align-items: center; }
 
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>💎 CVD Worker Salary Manager</h1>
+    <div class="card-header-actions">
+        <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+        <button class="type-btn" onclick="openTypeModal()" id="typeDisplayBtn">
+            <i class="far fa-gem"></i> <span id="currentTypeLabel">3EX</span>
+        </button>
+        <button class="icon-btn" onclick="openSettings()" title="Edit Rates">⚙️</button>
+    </div>
+
+    <h1>💎 CVD Diamond Manager</h1>
 
     <div class="input-grid">
         <div class="form-group">
             <label for="workerName">Worker Name</label>
-            <input type="text" id="workerName" placeholder="Enter name">
+            <input type="text" id="workerName" list="nameSuggestions" placeholder="Name" autocomplete="off">
+            <datalist id="nameSuggestions"></datalist>
         </div>
-        
         <div class="form-group">
             <label for="diamondSize">Size (Cts)</label>
-            <input type="number" id="diamondSize" step="0.01" placeholder="e.g. 2.50" oninput="updateRatePreview()">
+            <input type="number" id="diamondSize" step="0.01" placeholder="2.50" oninput="updateRatePreview()">
         </div>
-
         <div class="form-group">
             <label for="diamondType">Type</label>
-            <select id="diamondType" onchange="updateRatePreview()">
-                <option value="T">T</option>
-                <option value="P">P</option>
-                <option value="M">M</option>
-                <option value="F">F</option>
-            </select>
+            <select id="diamondType" onchange="updateRatePreview()"></select>
         </div>
-
         <div class="form-group">
             <label for="quantity">Quantity (Pcs)</label>
-            <input type="number" id="quantity" placeholder="e.g. 10">
+            <input type="number" id="quantity" placeholder="1" value="1">
         </div>
-
-        <div id="rate-display">Enter size and type to see Rate...</div>
-
-        <button onclick="calculateAndAdd()">Add to List</button>
+        <div id="rate-display">Enter size...</div>
+        <button class="add-btn" onclick="addEntry()">Add to List</button>
     </div>
 
     <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th>Worker</th>
-                    <th>Size</th>
-                    <th>Type</th>
-                    <th>Rate</th>
-                    <th>Qty</th>
-                    <th>Calculation (Size × Rate × Qty)</th>
-                    <th>Total Salary</th>
-                    <th>Action</th>
+                    <th>Date</th><th>Worker</th><th>Size</th><th>Type</th><th>Rate</th><th>Qty</th><th>Total</th><th>Action</th>
                 </tr>
             </thead>
-            <tbody id="salaryTableBody">
-                </tbody>
+            <tbody id="salaryTableBody"></tbody>
         </table>
     </div>
 
     <div class="total-section">
-        Grand Total: ₹<span id="grandTotal">0.00</span>
+        <div class="grand-total">Total: ₹<span id="grandTotal">0.00</span></div>
+    </div>
+
+    <input type="file" id="importFile" accept=".csv" style="display:none" onchange="importCSV(this)">
+
+    <div class="report-panel">
+        <button class="action-btn-shared clear-btn" onclick="openClearModal()">🗑️ Clear</button>
+        <button class="action-btn-shared restore-btn" onclick="document.getElementById('importFile').click()">📥 Restore</button>
+        <button class="action-btn-shared csv-btn" onclick="exportToCSV()">📊 Export CSV</button>
+        <button class="action-btn-shared print-btn" onclick="openDateModal()">📄 Download PDF</button>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 Designed & Developed by <strong>Akshat Dhanani</strong>
+    </div>
+</div>
+
+<div id="typeModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>💎 Select Diamond Type</h3><span class="close-modal" onclick="closeTypeModal()">&times;</span></div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+            <div class="type-option active" id="opt3EX" onclick="selectType('3EX')">✨ CVD 3EX (Standard)</div>
+            <div class="type-option" id="optComm" onclick="selectType('Commercial')">🏭 CVD Commercial</div>
+            <div class="type-option" id="optFancy" onclick="selectType('Fancy')">🌸 Fancy Diamond</div>
+        </div>
+    </div>
+</div>
+
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>⚙️ Rate Card</h3>
+            <button class="close-modal" onclick="closeSettings()">&times;</button>
+        </div>
+        
+        <div class="settings-tabs">
+            <button class="tab-btn active" id="tab3EX" onclick="switchSettingsTab('3EX')">3EX</button>
+            <button class="tab-btn" id="tabCommercial" onclick="switchSettingsTab('Commercial')">Comm</button>
+            <button class="tab-btn" id="tabFancy" onclick="switchSettingsTab('Fancy')">Fancy</button>
+        </div>
+
+        <div id="rateHeaderRow" class="rate-header-row"></div>
+        <div id="ratesList"></div>
+        
+        <div class="modal-actions">
+            <button class="reset-btn" onclick="resetRates()">Reset Defaults</button>
+            <button class="save-btn" onclick="saveRates()">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<div id="dateModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>📅 Report Date</h3><span class="close-modal" onclick="closeDateModal()">&times;</span></div>
+        <div class="form-group" style="margin-bottom:15px"><label>From:</label><input type="date" id="startDate"></div>
+        <div class="form-group"><label>To:</label><input type="date" id="endDate"></div>
+        <div class="modal-actions"><button class="save-btn" onclick="generateReport()">Download PDF</button><button class="cancel-btn" onclick="closeDateModal()">Cancel</button></div>
+    </div>
+</div>
+
+<div id="clearModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="border-bottom-color: #dc3545;"><h3 style="color: #dc3545;">🗑️ Clear Data</h3><button class="close-modal" onclick="closeClearModal()">&times;</button></div>
+        <div style="margin-bottom: 15px; opacity:0.8; font-size:0.9em;">Select range or leave empty for ALL.</div>
+        <div class="form-group" style="margin-bottom: 15px;"><label>From:</label><input type="date" id="clearStart"></div>
+        <div class="form-group"><label>To:</label><input type="date" id="clearEnd"></div>
+        <div class="modal-actions"><button class="danger-btn" onclick="performClear()">Delete</button><button class="cancel-btn" onclick="closeClearModal()">Cancel</button></div>
     </div>
 </div>
 
 <script>
-    // Data from your image: CVD 3EX, Date 1-12-2024
-    const rateCard = [
+    // --- RATES DATABASE ---
+    const rates3EX_Default = [
         { min: 0.30, max: 0.49, rates: { T: 527, P: 330, M: 368, F: 1225 } },
         { min: 0.50, max: 0.69, rates: { T: 484, P: 303, M: 338, F: 1125 } },
         { min: 0.70, max: 0.89, rates: { T: 441, P: 276, M: 308, F: 1025 } },
@@ -232,22 +350,103 @@
         { min: 2.00, max: 2.99, rates: { T: 291, P: 182, M: 202, F: 675 } },
         { min: 3.00, max: 3.99, rates: { T: 280, P: 175, M: 195, F: 650 } },
         { min: 4.00, max: 4.99, rates: { T: 270, P: 168, M: 187, F: 625 } },
-        { min: 5.00, max: 9999, rates: { T: 248, P: 155, M: 172, F: 575 } } // 5.00 up
+        { min: 5.00, max: 9999, rates: { T: 248, P: 155, M: 172, F: 575 } } 
     ];
 
-    let grandTotal = 0;
+    const ratesComm_Default = [
+        { min: 0.30, max: 0.49, rates: { T: 195, P: 82, M: 107, F: 384 } },
+        { min: 0.50, max: 0.99, rates: { T: 174, P: 73, M: 96, F: 343 } },
+        { min: 1.00, max: 1.49, rates: { T: 152, P: 65, M: 84, F: 301 } },
+        { min: 1.50, max: 1.99, rates: { T: 147, P: 63, M: 81, F: 291 } },
+        { min: 2.00, max: 2.99, rates: { T: 137, P: 58, M: 75, F: 270 } },
+        { min: 3.00, max: 3.99, rates: { T: 132, P: 55, M: 72, F: 259 } },
+        { min: 4.00, max: 4.99, rates: { T: 126, P: 53, M: 70, F: 249 } },
+        { min: 5.00, max: 9999, rates: { T: 111, P: 46, M: 61, F: 218 } } 
+    ];
 
-    // Function to find rate based on size and type
-    function findRate(size, type) {
-        // Find the correct row based on size range
-        const row = rateCard.find(r => size >= r.min && size <= r.max);
-        if (row) {
-            return row.rates[type];
+    const ratesFancy_Default = [
+        { min: 1.00, max: 1.99, rates: { Full: 1300, Border: 1150 } },
+        { min: 2.00, max: 2.99, rates: { Full: 1100, Border: 900 } },
+        { min: 3.00, max: 4.99, rates: { Full: 950, Border: 800 } },
+        { min: 5.00, max: 9999, rates: { Full: 800, Border: 700 } }
+    ];
+
+    let currentRates = []; 
+    let entries = [];
+    let currentCategory = "3EX"; 
+    
+    // --- VARIABLES FOR SETTINGS EDITING ---
+    let editingCategory = "3EX";
+    let editingRates = [];
+
+    window.onload = function() {
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
         }
-        return 0; // If size is below 0.30 or invalid
+        const savedData = localStorage.getItem('diamondData');
+        if (savedData) entries = JSON.parse(savedData);
+        
+        selectType('3EX'); 
+        renderTable();
+        updateSuggestions();
+    };
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
     }
 
-    // Helper to show the rate before clicking Add
+    // --- TYPE LOGIC ---
+    function openTypeModal() { document.getElementById('typeModal').style.display = 'flex'; }
+    function closeTypeModal() { document.getElementById('typeModal').style.display = 'none'; }
+
+    function selectType(type) {
+        currentCategory = type;
+        document.getElementById('currentTypeLabel').innerText = (type === 'Commercial') ? "COMM" : type;
+        
+        document.querySelectorAll('.type-option').forEach(el => el.classList.remove('active'));
+        if(type === '3EX') document.getElementById('opt3EX').classList.add('active');
+        if(type === 'Commercial') document.getElementById('optComm').classList.add('active');
+        if(type === 'Fancy') document.getElementById('optFancy').classList.add('active');
+
+        // Update Dropdown & Include TP for 3EX/Comm
+        const typeSelect = document.getElementById('diamondType');
+        typeSelect.innerHTML = ''; 
+        if (type === 'Fancy') {
+            typeSelect.innerHTML = '<option value="Full">Full</option><option value="Border">Border</option>';
+        } else {
+            typeSelect.innerHTML = '<option value="T">T</option><option value="P">P</option><option value="M">M</option><option value="F">F</option><option value="TP">TP (T+P)</option>';
+        }
+
+        currentRates = getRatesForCategory(type);
+        updateRatePreview(); 
+        closeTypeModal();
+    }
+
+    function getRatesForCategory(cat) {
+        let storageKey = 'rates_' + cat.toLowerCase();
+        let defaultData;
+        if(cat === '3EX') defaultData = rates3EX_Default;
+        else if(cat === 'Commercial') defaultData = ratesComm_Default;
+        else defaultData = ratesFancy_Default;
+        
+        const saved = localStorage.getItem(storageKey);
+        return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData));
+    }
+
+    // --- CORE LOGIC ---
+    function findRate(size, type) {
+        const row = currentRates.find(r => size >= r.min && size <= r.max);
+        if (!row) return 0;
+        
+        // AUTO-CALCULATE TP (T + P)
+        if (type === 'TP') {
+            return (row.rates['T'] || 0) + (row.rates['P'] || 0);
+        }
+        
+        return row.rates[type] || 0;
+    }
+
     function updateRatePreview() {
         const size = parseFloat(document.getElementById('diamondSize').value);
         const type = document.getElementById('diamondType').value;
@@ -256,80 +455,224 @@
         if (size && type) {
             const rate = findRate(size, type);
             if (rate > 0) {
-                display.innerText = `Detected Range: Rate for Type '${type}' is ₹${rate}`;
-                display.style.color = "green";
+                display.innerText = `Rate: ₹${rate} (${currentCategory})`;
+                display.style.color = document.body.classList.contains('dark-mode') ? "#4dabf7" : "green";
             } else {
-                display.innerText = "Size not found in rate list (Must be 0.30+)";
-                display.style.color = "red";
+                display.innerText = "Size not found";
+                display.style.color = "#dc3545";
             }
-        } else {
-            display.innerText = "Enter size and type to see Rate...";
-            display.style.color = "#666";
         }
     }
 
-    function calculateAndAdd() {
-        // Get Input Values
-        const name = document.getElementById('workerName').value;
+    function addEntry() {
+        const name = document.getElementById('workerName').value.trim();
         const size = parseFloat(document.getElementById('diamondSize').value);
         const type = document.getElementById('diamondType').value;
-        const qty = parseFloat(document.getElementById('quantity').value);
+        let qty = parseFloat(document.getElementById('quantity').value);
+        if (!qty || qty <= 0) qty = 1;
 
-        // Validation
-        if (!name || !size || !qty) {
-            alert("Please fill in all fields.");
-            return;
-        }
-
-        // Get Rate
+        if (!name || !size) { alert("Fill worker name and size"); return; }
         const rate = findRate(size, type);
+        if (rate === 0) { alert(`Invalid Size for ${currentCategory} rates.`); return; }
+        
+        const total = size * rate * qty;
+        const today = new Date().toLocaleDateString('en-IN'); 
 
-        if (rate === 0) {
-            alert("Invalid size! Size must be 0.30 or higher.");
-            return;
-        }
-
-        // Calculate Logic: Size * Rate * Quantity
-        const totalSalary = size * rate * qty;
-
-        // Add to Table
-        const tableBody = document.getElementById('salaryTableBody');
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>${name}</td>
-            <td>${size.toFixed(2)}</td>
-            <td>${type}</td>
-            <td>${rate}</td>
-            <td>${qty}</td>
-            <td>${size} × ${rate} × ${qty}</td>
-            <td><strong>₹${totalSalary.toFixed(2)}</strong></td>
-            <td><button class="delete-btn" onclick="deleteRow(this, ${totalSalary})">Remove</button></td>
-        `;
-
-        tableBody.appendChild(row);
-
-        // Update Grand Total
-        grandTotal += totalSalary;
-        document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
-
-        // Clear numeric inputs for next entry (keep name for ease)
+        entries.push({ 
+            id: Date.now(), date: today, name: name, size: size, type: type, rate: rate, qty: qty, total: total, category: currentCategory 
+        });
+        
+        saveData(); renderTable(); updateSuggestions();
         document.getElementById('diamondSize').value = '';
-        document.getElementById('quantity').value = '';
-        updateRatePreview();
+        document.getElementById('quantity').value = '1';
     }
 
-    function deleteRow(btn, salary) {
-        const row = btn.parentNode.parentNode;
-        row.parentNode.removeChild(row);
-        grandTotal -= salary;
-        document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
+    function deleteEntry(id) {
+        if(confirm("Remove?")) { entries = entries.filter(e => e.id !== id); saveData(); renderTable(); updateSuggestions(); }
+    }
+    function saveData() { localStorage.setItem('diamondData', JSON.stringify(entries)); }
+    function updateSuggestions() {
+        const dl = document.getElementById('nameSuggestions'); dl.innerHTML = ''; 
+        [...new Set(entries.map(e => e.name))].forEach(n => { const o = document.createElement('option'); o.value = n; dl.appendChild(o); });
+    }
+
+    function renderTable() {
+        const tb = document.getElementById('salaryTableBody'); tb.innerHTML = ''; let gt = 0;
+        [...entries].reverse().forEach(e => {
+            gt += e.total;
+            let c = '';
+            if(e.category === 'Commercial') c = 'commercial-row';
+            if(e.category === 'Fancy') c = 'fancy-row';
+            tb.insertAdjacentHTML('beforeend', `<tr class="${c}"><td>${e.date}</td><td>${e.name}</td><td>${e.size.toFixed(2)}</td><td>${e.type}</td><td>${e.rate}</td><td>${e.qty}</td><td><strong>₹${e.total.toFixed(2)}</strong></td><td><button class="delete-btn" onclick="deleteEntry(${e.id})">X</button></td></tr>`);
+        });
+        document.getElementById('grandTotal').innerText = gt.toFixed(2);
+    }
+
+    // --- SETTINGS LOGIC (FIXED TABLE) ---
+    function openSettings() {
+        // Start by editing the current category
+        switchSettingsTab(currentCategory);
+        document.getElementById('settingsModal').style.display = 'flex';
+    }
+    function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
+
+    function switchSettingsTab(type) {
+        editingCategory = type;
+        editingRates = getRatesForCategory(type);
+        
+        // Update Tabs UI
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        if(type === '3EX') document.getElementById('tab3EX').classList.add('active');
+        if(type === 'Commercial') document.getElementById('tabCommercial').classList.add('active');
+        if(type === 'Fancy') document.getElementById('tabFancy').classList.add('active');
+
+        renderSettingsTable();
+    }
+
+    function renderSettingsTable() {
+        const list = document.getElementById('ratesList');
+        const header = document.getElementById('rateHeaderRow');
+        list.innerHTML = '';
+        
+        let columns = (editingCategory === 'Fancy') ? ['Full', 'Border'] : ['T', 'P', 'M', 'F'];
+
+        // Grid Layout: 1.2fr for Size, then equal for types
+        let colTemplate = `1.2fr repeat(${columns.length}, 1fr)`;
+        header.style.gridTemplateColumns = colTemplate;
+        header.innerHTML = `<span>Size (Cts)</span>` + columns.map(c => `<span>${c}</span>`).join('');
+
+        editingRates.forEach((row, index) => {
+            let inputs = '';
+            columns.forEach(col => {
+                inputs += `<div class="st-cell"><input type="number" class="rate-input" id="r-${index}-${col}" value="${row.rates[col]}"></div>`;
+            });
+            
+            const html = `
+                <div class="rate-data-row" style="grid-template-columns: ${colTemplate};">
+                    <div class="st-cell range-cell">
+                        <input type="number" step="0.01" class="range-input" id="min-${index}" value="${row.min}">
+                        <input type="number" step="0.01" class="range-input" id="max-${index}" value="${row.max}">
+                    </div>
+                    ${inputs}
+                </div>
+            `;
+            list.insertAdjacentHTML('beforeend', html);
+        });
+    }
+
+    function saveRates() {
+        let columns = (editingCategory === 'Fancy') ? ['Full', 'Border'] : ['T', 'P', 'M', 'F'];
+        
+        editingRates.forEach((row, index) => {
+            row.min = parseFloat(document.getElementById(`min-${index}`).value) || 0;
+            row.max = parseFloat(document.getElementById(`max-${index}`).value) || 0;
+            columns.forEach(col => {
+                row.rates[col] = parseInt(document.getElementById(`r-${index}-${col}`).value) || 0;
+            });
+        });
+
+        let storageKey = 'rates_' + editingCategory.toLowerCase();
+        localStorage.setItem(storageKey, JSON.stringify(editingRates));
+        
+        if(editingCategory === currentCategory) {
+            currentRates = JSON.parse(JSON.stringify(editingRates));
+            updateRatePreview();
+        }
+        
+        alert("Saved " + editingCategory + " Rates!");
+        closeSettings();
+    }
+
+    function resetRates() {
+        if(confirm("Reset defaults for " + editingCategory + "?")) {
+            let def;
+            if(editingCategory === '3EX') def = rates3EX_Default;
+            else if(editingCategory === 'Commercial') def = ratesComm_Default;
+            else def = ratesFancy_Default;
+            
+            editingRates = JSON.parse(JSON.stringify(def));
+            renderSettingsTable();
+        }
+    }
+
+    // --- CLEAR/DATE MODALS ---
+    function openClearModal() { document.getElementById('clearModal').style.display = 'flex'; }
+    function closeClearModal() { document.getElementById('clearModal').style.display = 'none'; }
+    function performClear() {
+        const s = document.getElementById('clearStart').value;
+        const e = document.getElementById('clearEnd').value;
+        if (!s && !e) {
+            if(confirm("Delete ALL data?")) { entries=[]; saveData(); renderTable(); updateSuggestions(); closeClearModal(); }
+            return;
+        }
+        if (s && e) {
+            const d1 = new Date(s); d1.setHours(0,0,0,0);
+            const d2 = new Date(e); d2.setHours(23,59,59,999);
+            const before = entries.length;
+            entries = entries.filter(i => { const p = i.date.split('/'); const d = new Date(p[2], p[1]-1, p[0]); return !(d >= d1 && d <= d2); });
+            if(before - entries.length > 0) { saveData(); renderTable(); updateSuggestions(); closeClearModal(); alert("Deleted."); }
+            else alert("No entries in range.");
+        } else alert("Select both dates.");
+    }
+    function openDateModal() { document.getElementById('dateModal').style.display = 'flex'; }
+    function closeDateModal() { document.getElementById('dateModal').style.display = 'none'; }
+
+    // --- EXPORT/IMPORT ---
+    function exportToCSV() {
+        if (!entries.length) { alert("No data!"); return; }
+        let csv = "Date,Name,Category,Size,Type,Rate,Qty,Total\n";
+        entries.forEach(e => csv += `${e.date},${e.name},${e.category||'3EX'},${e.size},${e.type},${e.rate},${e.qty},${e.total}\n`);
+        const a = document.createElement("a"); a.href = encodeURI("data:text/csv;charset=utf-8," + csv); a.download = "Diamonds.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+    function importCSV(input) {
+        const f = input.files[0]; if (!f) return;
+        const r = new FileReader(); r.onload = e => {
+            const l = e.target.result.split("\n"); if(l.length < 2 || !confirm("Merge?")) return;
+            for(let i=1; i<l.length; i++) {
+                const c = l[i].split(",");
+                if(c.length >= 8) entries.push({ id:Date.now()+i, date:c[0], name:c[1], category:c[2], size:parseFloat(c[3]), type:c[4], rate:parseInt(c[5]), qty:parseInt(c[6]), total:parseFloat(c[7]) });
+                else if(c.length === 7) entries.push({ id:Date.now()+i, date:c[0], name:c[1], category:'3EX', size:parseFloat(c[2]), type:c[3], rate:parseInt(c[4]), qty:parseInt(c[5]), total:parseFloat(c[6]) });
+            }
+            saveData(); renderTable(); updateSuggestions(); alert("Done"); input.value='';
+        }; r.readAsText(f);
+    }
+
+    // --- PDF ---
+    function parseDateStr(s) { const p=s.split('/'); return new Date(p[2],p[1]-1,p[0]); }
+    function generateReport() {
+        if (!entries.length) { alert("No data!"); return; }
+        const s = document.getElementById('startDate').value; const e = document.getElementById('endDate').value;    
+        let d = entries; let tr = "(All Time)";
+        if (s && e) {
+            const d1 = new Date(s); d1.setHours(0,0,0,0); const d2 = new Date(e); d2.setHours(23,59,59,999);
+            tr = `(${d1.toLocaleDateString('en-IN')} to ${d2.toLocaleDateString('en-IN')})`;
+            d = entries.filter(i => { const x = parseDateStr(i.date); return x >= d1 && x <= d2; });
+            if(!d.length) { alert("No entries"); return; }
+        } else if (s || e) { alert("Select both"); return; }
+        
+        closeDateModal();
+        const names = [...new Set(d.map(i => i.name))];
+        let h = `<html><head><title>Report</title><style>body{font-family:sans-serif;padding:20px}h1{text-align:center;border-bottom:2px solid #333}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:0.9em}th{background:#eee}.comm{background-color:#fff9c4 !important;-webkit-print-color-adjust:exact}.fancy{background-color:#f8d7da !important;-webkit-print-color-adjust:exact}</style></head><body><h1>💎 Salary Report</h1><center>${tr}</center>`;
+        
+        let gt = 0;
+        names.forEach(n => {
+            const wData = d.filter(i => i.name === n);
+            let wt = 0;
+            h += `<h3>👤 ${n}</h3><table><thead><tr><th>Date</th><th>Type</th><th>Size</th><th>Rate</th><th>Qty</th><th>Total</th></tr></thead><tbody>`;
+            wData.forEach(r => {
+                wt += r.total;
+                let bg = '', lbl = '';
+                if(r.category === 'Commercial') { bg = 'class="comm"'; lbl = '(Comm)'; }
+                if(r.category === 'Fancy') { bg = 'class="fancy"'; lbl = '(Fancy)'; }
+                h += `<tr ${bg}><td>${r.date}</td><td>${r.type} ${lbl}</td><td>${r.size.toFixed(2)}</td><td>${r.rate}</td><td>${r.qty}</td><td>${r.total.toFixed(2)}</td></tr>`;
+            });
+            h += `</tbody><tfoot><tr><td colspan="5" align="right"><b>Total:</b></td><td><b>₹${wt.toFixed(2)}</b></td></tr></tfoot></table>`;
+            gt += wt;
+        });
+        h += `<h2 align="right">Grand Total: ₹${gt.toFixed(2)}</h2><script>window.print()<\/script></body></html>`;
+        const w = window.open('', '_blank'); w.document.write(h); w.document.close();
     }
 </script>
-
-<div class="footer">
-    &copy; 2025 Developed by <strong>Akshat Dhanani.</strong> 
-</div>
 
 </body>
 </html>
