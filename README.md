@@ -1,6 +1,6 @@
 # 💎 CVD Diamond Worker Salary Manager
 
-### Developed by Dhanani Akshat Mahileshkumar
+### Developed by Akshat Dhanani
 
 ## 📋 Project Overview
 This is a custom web application developed for the Diamond Industry to automate worker salary calculations. It replaces manual calculations by instantly processing data based on the "CVD 3EX" Rate Sheet.
@@ -23,4 +23,4 @@ This is a custom web application developed for the Diamond Industry to automate 
 5.  Click **Add to List** to calculate the total payout.
 
 ---
-**© 2025 | Developed by Akshat Dhanani.**
+**© 2025 | Reserved by Akshat Dhanani.**
