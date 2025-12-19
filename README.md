@@ -85,5 +85,5 @@ This software is **not open-source**. It is a commercial product protected by co
 
 ## 📜 Copyright
 
-**© 2025 Designed & Developed by Dhanani Akshat Mahileshkumar.**
+**© 2025 Designed & Developed by Akshat Dhanani.**
 All rights reserved.
