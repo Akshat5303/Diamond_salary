@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVD Diamond Worker Salary Manager</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --light: #f4f7f6;
+            --dark: #333;
+            --border: #ddd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 5px rgba(0,86,179,0.2);
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #004494;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .total-section {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary);
+            padding: 15px;
+            background: #eef6ff;
+            border-radius: 5px;
+        }
+
+        .delete-btn {
+            background-color: #ff4d4d;
+            padding: 5px 10px;
+            font-size: 0.8em;
+            width: auto;
+            margin: 0;
+        }
+        
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+
+        /* Status message for Rate detection */
+        #rate-display {
+            grid-column: 1 / -1;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #888;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>💎 CVD Worker Salary Manager</h1>
+
+    <div class="input-grid">
+        <div class="form-group">
+            <label for="workerName">Worker Name</label>
+            <input type="text" id="workerName" placeholder="Enter name">
+        </div>
+        
+        <div class="form-group">
+            <label for="diamondSize">Size (Cts)</label>
+            <input type="number" id="diamondSize" step="0.01" placeholder="e.g. 2.50" oninput="updateRatePreview()">
+        </div>
+
+        <div class="form-group">
+            <label for="diamondType">Type</label>
+            <select id="diamondType" onchange="updateRatePreview()">
+                <option value="T">T</option>
+                <option value="P">P</option>
+                <option value="M">M</option>
+                <option value="F">F</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">Quantity (Pcs)</label>
+            <input type="number" id="quantity" placeholder="e.g. 10">
+        </div>
+
+        <div id="rate-display">Enter size and type to see Rate...</div>
+
+        <button onclick="calculateAndAdd()">Add to List</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Worker</th>
+                    <th>Size</th>
+                    <th>Type</th>
+                    <th>Rate</th>
+                    <th>Qty</th>
+                    <th>Calculation (Size × Rate × Qty)</th>
+                    <th>Total Salary</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="salaryTableBody">
+                </tbody>
+        </table>
+    </div>
+
+    <div class="total-section">
+        Grand Total: ₹<span id="grandTotal">0.00</span>
+    </div>
+</div>
+
+<script>
+    // Data from your image: CVD 3EX, Date 1-12-2024
+    const rateCard = [
+        { min: 0.30, max: 0.49, rates: { T: 527, P: 330, M: 368, F: 1225 } },
+        { min: 0.50, max: 0.69, rates: { T: 484, P: 303, M: 338, F: 1125 } },
+        { min: 0.70, max: 0.89, rates: { T: 441, P: 276, M: 308, F: 1025 } },
+        { min: 0.90, max: 0.99, rates: { T: 387, P: 243, M: 270, F: 900 } },
+        { min: 1.00, max: 1.49, rates: { T: 344, P: 216, M: 240, F: 800 } },
+        { min: 1.50, max: 1.99, rates: { T: 312, P: 195, M: 218, F: 725 } },
+        { min: 2.00, max: 2.99, rates: { T: 291, P: 182, M: 202, F: 675 } },
+        { min: 3.00, max: 3.99, rates: { T: 280, P: 175, M: 195, F: 650 } },
+        { min: 4.00, max: 4.99, rates: { T: 270, P: 168, M: 187, F: 625 } },
+        { min: 5.00, max: 9999, rates: { T: 248, P: 155, M: 172, F: 575 } } // 5.00 up
+    ];
+
+    let grandTotal = 0;
+
+    // Function to find rate based on size and type
+    function findRate(size, type) {
+        // Find the correct row based on size range
+        const row = rateCard.find(r => size >= r.min && size <= r.max);
+        if (row) {
+            return row.rates[type];
+        }
+        return 0; // If size is below 0.30 or invalid
+    }
+
+    // Helper to show the rate before clicking Add
+    function updateRatePreview() {
+        const size = parseFloat(document.getElementById('diamondSize').value);
+        const type = document.getElementById('diamondType').value;
+        const display = document.getElementById('rate-display');
+
+        if (size && type) {
+            const rate = findRate(size, type);
+            if (rate > 0) {
+                display.innerText = `Detected Range: Rate for Type '${type}' is ₹${rate}`;
+                display.style.color = "green";
+            } else {
+                display.innerText = "Size not found in rate list (Must be 0.30+)";
+                display.style.color = "red";
+            }
+        } else {
+            display.innerText = "Enter size and type to see Rate...";
+            display.style.color = "#666";
+        }
+    }
+
+    function calculateAndAdd() {
+        // Get Input Values
+        const name = document.getElementById('workerName').value;
+        const size = parseFloat(document.getElementById('diamondSize').value);
+        const type = document.getElementById('diamondType').value;
+        const qty = parseFloat(document.getElementById('quantity').value);
+
+        // Validation
+        if (!name || !size || !qty) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        // Get Rate
+        const rate = findRate(size, type);
+
+        if (rate === 0) {
+            alert("Invalid size! Size must be 0.30 or higher.");
+            return;
+        }
+
+        // Calculate Logic: Size * Rate * Quantity
+        const totalSalary = size * rate * qty;
+
+        // Add to Table
+        const tableBody = document.getElementById('salaryTableBody');
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${name}</td>
+            <td>${size.toFixed(2)}</td>
+            <td>${type}</td>
+            <td>${rate}</td>
+            <td>${qty}</td>
+            <td>${size} × ${rate} × ${qty}</td>
+            <td><strong>₹${totalSalary.toFixed(2)}</strong></td>
+            <td><button class="delete-btn" onclick="deleteRow(this, ${totalSalary})">Remove</button></td>
+        `;
+
+        tableBody.appendChild(row);
+
+        // Update Grand Total
+        grandTotal += totalSalary;
+        document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
+
+        // Clear numeric inputs for next entry (keep name for ease)
+        document.getElementById('diamondSize').value = '';
+        document.getElementById('quantity').value = '';
+        updateRatePreview();
+    }
+
+    function deleteRow(btn, salary) {
+        const row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+        grandTotal -= salary;
+        document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
+    }
+</script>
+
+<div class="footer">
+    &copy; 2025 Developed by <strong>Akshat Dhanani.</strong> 
+</div>
+
+</body>
+</html>
