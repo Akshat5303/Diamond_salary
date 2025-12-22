@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CVD Diamond Manager Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0056b3">
     <link rel="apple-touch-icon" href="diamond-logo-v1.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             /* --- COLORS --- */
@@ -15,6 +15,7 @@
             --container-bg: #ffffff;
             --text-color: #333333;
             --primary: #0056b3;
+            --secondary: #17a2b8;
             --border: #ddd;
             --input-bg: #ffffff;
             --table-header: #0056b3;
@@ -23,8 +24,8 @@
             --shadow: rgba(0,0,0,0.1);
             --btn-bg: #f8f9fa;
             /* Highlights */
-            --comm-highlight: #fdf4a5; 
-            --fancy-highlight: #fbcbe7; 
+            --comm-highlight: #fff9c4; 
+            --fancy-highlight: #f8d7da; 
             --highlight-text: #333;
         }
 
@@ -33,6 +34,7 @@
             --container-bg: #1e1e1e;
             --text-color: #e0e0e0;
             --primary: #4dabf7;
+            --secondary: #1aa1b8;
             --border: #333;
             --input-bg: #2d2d2d;
             --table-header: #212529;
@@ -66,15 +68,18 @@
             flex: 1;
             border: 1px solid var(--border);
             position: relative;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* --- HEADER --- */
         .card-header-actions {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
             margin-bottom: 15px;
         }
+        .header-right { display: flex; justify-content: flex-end; gap: 10px; }
 
         .icon-btn {
             background-color: var(--btn-bg);
@@ -85,13 +90,9 @@
             cursor: pointer;
             color: var(--text-color);
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 45px;
-            height: 45px;
+            display: flex; align-items: center; justify-content: center;
+            min-width: 45px; height: 45px;
         }
-
         .icon-btn:hover { background-color: var(--primary); color: white; border-color: var(--primary); }
 
         .type-btn {
@@ -100,28 +101,22 @@
             color: var(--primary);
             font-weight: bold;
             font-size: 0.9rem;
-            padding: 8px 15px;
+            padding: 8px 25px;
             border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
+            display: flex; align-items: center; gap: 8px; cursor: pointer; justify-content: center;
+            white-space: nowrap;
         }
         .type-btn:hover { background-color: var(--primary); color: white; }
 
         h1 {
-            text-align: center;
-            color: var(--primary);
-            margin-top: 0;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 10px;
-            font-size: 1.5rem;
+            text-align: center; color: var(--primary); margin-top: 0; margin-bottom: 20px;
+            border-bottom: 2px solid var(--border); padding-bottom: 10px; font-size: 1.5rem;
         }
 
-        /* --- INPUT FORM --- */
+        /* --- INPUT FORM (DESKTOP DEFAULT) --- */
         .input-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 12px; margin-bottom: 20px; background: var(--row-even);
             padding: 15px; border-radius: 8px; border: 1px solid var(--border);
         }
@@ -130,25 +125,47 @@
         input, select {
             padding: 12px; border: 1px solid var(--border); border-radius: 6px;
             font-size: 16px; background-color: var(--input-bg); color: var(--text-color);
+            width: 100%; box-sizing: border-box;
         }
         
+        /* Report Grid (Desktop) */
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px; margin-bottom: 20px; background: var(--row-even);
+            padding: 15px; border-radius: 8px; border: 1px solid var(--border);
+        }
+
+        /* --- ACTION GROUP --- */
+        .action-group {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 200px;
+            margin-top: 10px;
+        }
+
         .add-btn {
             background-color: var(--primary); color: white; border: none;
-            padding: 14px 25px; border-radius: 6px; font-size: 1rem; cursor: pointer;
-            width: 100%; margin-top: 20px; font-weight: bold;
+            padding: 14px; border-radius: 6px; font-size: 1rem; cursor: pointer;
+            font-weight: bold; flex: 1; 
+        }
+        
+        .report-view-btn {
+            background-color: var(--secondary); color: white; border: none;
+            padding: 14px; border-radius: 6px; font-size: 1rem; cursor: pointer;
+            font-weight: bold; flex: 1; 
         }
 
         /* --- TABLE --- */
         .table-container {
             overflow-x: auto; margin-top: 20px; max-height: 400px;
             overflow-y: auto; border: 1px solid var(--border); border-radius: 5px;
+            -webkit-overflow-scrolling: touch; /* Smooth scroll on mobile */
         }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); color: var(--text-color); }
         th { background-color: var(--table-header); color: white; position: sticky; top: 0; z-index: 10; }
         tr:nth-child(even) { background-color: var(--row-even); }
-
-        /* Row Highlights */
         tr.commercial-row { background-color: var(--comm-highlight) !important; color: var(--highlight-text); }
         tr.fancy-row { background-color: var(--fancy-highlight) !important; color: var(--highlight-text); }
 
@@ -159,30 +176,28 @@
         }
         .grand-total { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
 
+        /* --- REPORT VIEW --- */
+        #workerReportView { display: none; }
+        .report-header { display: flex; align-items: center; margin-bottom: 15px; justify-content: space-between; }
+        .back-btn {
+            background: transparent; border: 1px solid var(--border);
+            padding: 8px 15px; border-radius: 6px; cursor: pointer;
+            color: var(--text-color); font-weight: bold; display: flex; align-items: center; gap: 5px;
+        }
+        .back-btn:hover { background: var(--row-even); }
+
         /* --- BUTTONS --- */
         .report-panel { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; flex-wrap: wrap; }
         .action-btn-shared { border: none; border-radius: 6px; padding: 14px 20px; font-weight: bold; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
         .clear-btn { background-color: transparent; color: #dc3545; border: 1px solid #dc3545; }
         .csv-btn { background-color: #007bff; color: white; }
         .print-btn { background-color: #28a745; color: white; }
         .restore-btn { background-color: #6c757d; color: white; } 
         .delete-btn { background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-
-        #rate-display { grid-column: 1 / -1; font-size: 0.9em; margin-top: -5px; margin-bottom: 5px; font-style: italic; }
         .footer { text-align: center; margin-top: 40px; padding: 10px; opacity: 0.6; font-size: 0.8rem; border-top: 1px solid var(--border); }
 
-        @media (max-width: 600px) {
-            .report-panel { flex-direction: column-reverse; }
-            .action-btn-shared { width: 100%; flex: none; }
-            .print-btn { order: 4; } .csv-btn { order: 3; } .restore-btn { order: 2; } .clear-btn { order: 1; margin-top: 10px; border: none; color: #dc3545; }
-            .container { padding: 15px; }
-            .input-grid { grid-template-columns: 1fr 1fr; }
-            .form-group:first-child, .form-group:nth-child(4) { grid-column: 1 / -1; }
-        }
-
-        /* --- MODAL --- */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+        /* --- MODALS --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 2000; padding: 20px; box-sizing: border-box; }
         .modal-content { background-color: var(--modal-bg); padding: 20px; border-radius: 12px; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; }
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         .modal-actions { margin-top: 25px; display: flex; flex-direction: column; gap: 10px; }
@@ -192,96 +207,175 @@
         .cancel-btn { background: transparent; color: var(--text-color); border: 1px solid var(--border); padding: 12px; border-radius: 6px; cursor: pointer; }
         .close-modal { font-size: 1.5em; cursor: pointer; background: none; border: none; color: var(--text-color); }
 
-        .type-option {
-            background: var(--input-bg); border: 2px solid var(--border);
-            padding: 15px; border-radius: 8px; text-align: center; cursor: pointer;
-            font-weight: bold; transition: 0.2s;
-        }
+        .type-option { background: var(--input-bg); border: 2px solid var(--border); padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; font-weight: bold; transition: 0.2s; }
         .type-option:hover { border-color: var(--primary); }
         .type-option.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* --- SETTINGS TABS --- */
         .settings-tabs { display: flex; gap: 5px; margin-bottom: 15px; background: var(--row-even); padding: 5px; border-radius: 8px; }
         .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; cursor: pointer; font-weight: bold; color: var(--text-color); border-radius: 6px; transition: 0.2s; }
         .tab-btn.active { background: var(--primary); color: white; }
 
-        /* --- RATE TABLE GRID (FIXED) --- */
         .rate-header-row { display: grid; gap: 8px; text-align: center; font-weight: bold; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid var(--border); font-size: 0.9em; }
         .rate-data-row { display: grid; gap: 8px; align-items: center; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        
-        /* Compact Inputs */
         .rate-input { width: 100%; padding: 6px 2px; text-align: center; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text-color); font-size: 0.9rem; }
-        
-        /* Clearly Visible Size Inputs */
         .range-cell { display: flex; flex-direction: column; gap: 4px; }
-        .range-input { 
-            width: 100%; text-align: center; font-size: 0.85em; padding: 4px; 
-            border: 1px solid #aaa; background: #f8f9fa; border-radius: 3px; color: #333; font-weight: bold;
-        }
+        .range-input { width: 100%; text-align: center; font-size: 0.85em; padding: 4px; border: 1px solid #aaa; background: #f8f9fa; border-radius: 3px; color: #333; font-weight: bold; }
         body.dark-mode .range-input { background: #333; color: #fff; border-color: #555; }
-
         .st-cell { display: flex; justify-content: center; align-items: center; }
 
+        .worker-row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 10px; padding: 10px; background: var(--row-even); border-radius: 6px; border: 1px solid var(--border); align-items: center; }
+        .worker-row input { width: 100%; box-sizing: border-box; }
+        .worker-row select { width: 100%; padding: 10px; }
+        .worker-label { font-size: 0.8em; opacity: 0.6; margin-bottom: 2px; }
+
+        /* ========================================= */
+        /* ========= MOBILE RESPONSIVE  ============ */
+        /* ========================================= */
+        @media (max-width: 600px) {
+            body { padding: 0; }
+            .container { padding: 15px; border-radius: 0; border: none; box-shadow: none; }
+            
+            /* Compact Header */
+            .card-header-actions { gap: 5px; margin-bottom: 10px; }
+            .type-btn { padding: 8px 10px; font-size: 0.8rem; }
+            .icon-btn { min-width: 38px; height: 38px; padding: 5px; }
+            h1 { font-size: 1.3rem; margin-bottom: 15px; }
+
+            /* Optimized Input Layout for Mobile */
+            .input-grid { 
+                grid-template-columns: 1fr 1fr 1fr; /* 3 Columns base */
+                gap: 10px; padding: 10px; 
+            }
+            .form-group label { font-size: 0.8rem; }
+            input, select { padding: 10px; font-size: 15px; }
+
+            /* Date & Worker Name take full width on mobile */
+            .form-group:nth-child(1), /* Date */
+            .form-group:nth-child(2)  /* Worker */
+            { grid-column: span 3; }
+
+            /* Report Grid Stacking */
+            .report-grid { grid-template-columns: 1fr; gap: 10px; }
+
+            /* Compact Table */
+            .table-container { max-height: 50vh; }
+            th, td { padding: 10px 5px; font-size: 0.85rem; }
+            
+            /* Action Buttons */
+            .action-btn-shared { padding: 12px; font-size: 0.9rem; }
+            .report-panel { gap: 8px; flex-direction: column-reverse; }
+            .action-btn-shared { width: 100%; flex: none; }
+            .print-btn { order: 4; } .csv-btn { order: 3; } .restore-btn { order: 2; } .clear-btn { order: 1; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="card-header-actions">
-        <button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
-        <button class="type-btn" onclick="openTypeModal()" id="typeDisplayBtn">
-            <i class="far fa-gem"></i> <span id="currentTypeLabel">3EX</span>
-        </button>
-        <button class="icon-btn" onclick="openSettings()" title="Edit Rates">⚙️</button>
-    </div>
-
-    <h1>💎 CVD Diamond Manager</h1>
-
-    <div class="input-grid">
-        <div class="form-group">
-            <label for="workerName">Worker Name</label>
-            <input type="text" id="workerName" list="nameSuggestions" placeholder="Name" autocomplete="off">
-            <datalist id="nameSuggestions"></datalist>
+    
+    <div id="mainView">
+        <div class="card-header-actions">
+            <div><button class="icon-btn" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button></div>
+            <button class="type-btn" onclick="openTypeModal()" id="typeDisplayBtn"><i class="far fa-gem"></i> <span id="currentTypeLabel">3EX</span></button>
+            <div class="header-right">
+                <button class="icon-btn" onclick="openWorkerModal()" title="Manage Workers">👤</button>
+                <button class="icon-btn" onclick="openSettings()" title="Edit Rates">⚙️</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="diamondSize">Size (Cts)</label>
-            <input type="number" id="diamondSize" step="0.01" placeholder="2.50" oninput="updateRatePreview()">
+
+        <h1>💎 CVD Diamond Manager</h1>
+
+        <div class="input-grid">
+            <div class="form-group">
+                <label for="entryDate">Date</label>
+                <input type="date" id="entryDate">
+            </div>
+            <div class="form-group">
+                <label for="workerName">Worker Name</label>
+                <input type="text" id="workerName" list="nameSuggestions" placeholder="Name" autocomplete="off" oninput="checkWorkerType()">
+                <datalist id="nameSuggestions"></datalist>
+            </div>
+            <div class="form-group">
+                <label for="diamondSize">Size</label>
+                <input type="number" id="diamondSize" step="0.01" placeholder="2.50" oninput="updateRatePreview()">
+            </div>
+            <div class="form-group">
+                <label for="diamondType">Type</label>
+                <select id="diamondType" onchange="updateRatePreview()"></select>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Qty</label>
+                <input type="number" id="quantity" placeholder="1" value="1">
+            </div>
+            <div id="rate-display" style="grid-column: 1/-1; font-style:italic; font-size:0.9em; margin-top:-5px;">Enter size...</div>
+            
+            <div class="action-group">
+                <button class="add-btn" onclick="addEntry()">Add to List</button>
+                <button class="report-view-btn" onclick="openWorkerReportView()">📊 Worker Report</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="diamondType">Type</label>
-            <select id="diamondType" onchange="updateRatePreview()"></select>
+
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Date</th><th>Worker</th><th>Size</th><th>Type</th><th>Rate</th><th>Qty</th><th>Total</th><th>Action</th></tr></thead>
+                <tbody id="salaryTableBody"></tbody>
+            </table>
         </div>
-        <div class="form-group">
-            <label for="quantity">Quantity (Pcs)</label>
-            <input type="number" id="quantity" placeholder="1" value="1">
+
+        <div class="total-section">
+            <div class="grand-total">Total: ₹<span id="grandTotal">0.00</span></div>
         </div>
-        <div id="rate-display">Enter size...</div>
-        <button class="add-btn" onclick="addEntry()">Add to List</button>
+
+        <div class="report-panel">
+            <button class="action-btn-shared clear-btn" onclick="openClearModal()">🗑️ Clear</button>
+            <button class="action-btn-shared restore-btn" onclick="document.getElementById('importFile').click()">📥 Restore</button>
+            <button class="action-btn-shared csv-btn" onclick="exportToCSV()">📊 Export CSV</button>
+            <button class="action-btn-shared print-btn" onclick="openDateModal()">📄 Download PDF</button>
+        </div>
     </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th><th>Worker</th><th>Size</th><th>Type</th><th>Rate</th><th>Qty</th><th>Total</th><th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="salaryTableBody"></tbody>
-        </table>
+    <div id="workerReportView">
+        <div class="report-header">
+            <button class="back-btn" onclick="closeWorkerReportView()">⬅ Back</button>
+            <h2 style="margin:0; color:var(--primary);">📊 Worker Report</h2>
+            <div style="width:70px"></div>
+        </div>
+
+        <div class="report-grid">
+            <div class="form-group">
+                <label>Worker</label>
+                <input type="text" id="reportWorkerName" list="nameSuggestions" placeholder="Select Name">
+            </div>
+            <div class="form-group">
+                <label>From</label>
+                <input type="date" id="reportStartDate">
+            </div>
+            <div class="form-group">
+                <label>To</label>
+                <input type="date" id="reportEndDate">
+            </div>
+            
+            <div style="grid-column: 1/-1; display:flex; gap:10px; margin-top:5px;">
+                <button class="add-btn" onclick="generateSpecificReport()">Show on Screen</button>
+                <button class="print-btn" style="flex:1; border-radius:6px; font-weight:bold; border:none;" onclick="downloadWorkerPDF()">Download PDF</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Date</th><th>Size</th><th>Type</th><th>Rate</th><th>Qty</th><th>Total</th></tr></thead>
+                <tbody id="reportTableBody">
+                    <tr><td colspan="6" style="text-align:center; opacity:0.6; padding:20px;">Select a worker and dates to see report.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="total-section">
+            <div class="grand-total">Worker Total: ₹<span id="reportTotal">0.00</span></div>
+        </div>
     </div>
 
-    <div class="total-section">
-        <div class="grand-total">Total: ₹<span id="grandTotal">0.00</span></div>
-    </div>
-
-    <input type="file" id="importFile" accept=".csv" style="display:none" onchange="importCSV(this)">
-
-    <div class="report-panel">
-        <button class="action-btn-shared clear-btn" onclick="openClearModal()">🗑️ Clear</button>
-        <button class="action-btn-shared restore-btn" onclick="document.getElementById('importFile').click()">📥 Restore</button>
-        <button class="action-btn-shared csv-btn" onclick="exportToCSV()">📊 Export CSV</button>
-        <button class="action-btn-shared print-btn" onclick="openDateModal()">📄 Download PDF</button>
-    </div>
+    <input type="file" id="importFile" accept=".csv,text/csv,application/vnd.ms-excel,text/plain" style="display:none" onchange="importCSV(this)">
 
     <div class="footer">
         &copy; 2025 Designed & Developed by <strong>Akshat Dhanani</strong>
@@ -299,26 +393,26 @@
     </div>
 </div>
 
+<div id="workerModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header"><h3>👤 Manage Workers</h3><span class="close-modal" onclick="closeWorkerModal()">&times;</span></div>
+        <div style="margin-bottom:10px; font-size:0.9em; opacity:0.7;">Change names and assign Default Types.<br>The app will auto-select this type when you choose the name.</div>
+        <div id="workerListContainer"></div>
+        <div class="modal-actions"><button class="save-btn" onclick="closeWorkerModal()">Done</button></div>
+    </div>
+</div>
+
 <div id="settingsModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h3>⚙️ Rate Card</h3>
-            <button class="close-modal" onclick="closeSettings()">&times;</button>
-        </div>
-        
+        <div class="modal-header"><h3>⚙️ Rate Card</h3><span class="close-modal" onclick="closeSettings()">&times;</span></div>
         <div class="settings-tabs">
             <button class="tab-btn active" id="tab3EX" onclick="switchSettingsTab('3EX')">3EX</button>
             <button class="tab-btn" id="tabCommercial" onclick="switchSettingsTab('Commercial')">Comm</button>
             <button class="tab-btn" id="tabFancy" onclick="switchSettingsTab('Fancy')">Fancy</button>
         </div>
-
         <div id="rateHeaderRow" class="rate-header-row"></div>
         <div id="ratesList"></div>
-        
-        <div class="modal-actions">
-            <button class="reset-btn" onclick="resetRates()">Reset Defaults</button>
-            <button class="save-btn" onclick="saveRates()">Save Changes</button>
-        </div>
+        <div class="modal-actions"><button class="reset-btn" onclick="resetRates()">Reset Defaults</button><button class="save-btn" onclick="saveRates()">Save Changes</button></div>
     </div>
 </div>
 
@@ -333,7 +427,7 @@
 
 <div id="clearModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header" style="border-bottom-color: #dc3545;"><h3 style="color: #dc3545;">🗑️ Clear Data</h3><button class="close-modal" onclick="closeClearModal()">&times;</button></div>
+        <div class="modal-header" style="border-bottom-color: #dc3545;"><h3 style="color: #dc3545;">🗑️ Clear Data</h3><button class="close-modal" onclick="closeClearModal()">&times;</span></div>
         <div style="margin-bottom: 15px; opacity:0.8; font-size:0.9em;">Select range or leave empty for ALL.</div>
         <div class="form-group" style="margin-bottom: 15px;"><label>From:</label><input type="date" id="clearStart"></div>
         <div class="form-group"><label>To:</label><input type="date" id="clearEnd"></div>
@@ -343,341 +437,292 @@
 
 <script>
     // --- RATES DATABASE ---
-    const rates3EX_Default = [
-        { min: 0.30, max: 0.49, rates: { T: 527, P: 330, M: 368, F: 1225 } },
-        { min: 0.50, max: 0.69, rates: { T: 484, P: 303, M: 338, F: 1125 } },
-        { min: 0.70, max: 0.89, rates: { T: 441, P: 276, M: 308, F: 1025 } },
-        { min: 0.90, max: 0.99, rates: { T: 387, P: 243, M: 270, F: 900 } },
-        { min: 1.00, max: 1.49, rates: { T: 344, P: 216, M: 240, F: 800 } },
-        { min: 1.50, max: 1.99, rates: { T: 312, P: 195, M: 218, F: 725 } },
-        { min: 2.00, max: 2.99, rates: { T: 291, P: 182, M: 202, F: 675 } },
-        { min: 3.00, max: 3.99, rates: { T: 280, P: 175, M: 195, F: 650 } },
-        { min: 4.00, max: 4.99, rates: { T: 270, P: 168, M: 187, F: 625 } },
-        { min: 5.00, max: 9999, rates: { T: 248, P: 155, M: 172, F: 575 } } 
-    ];
+    const rates3EX_Default = [{ min: 0.30, max: 0.49, rates: { T: 527, P: 330, M: 368, F: 1225 } },{ min: 0.50, max: 0.69, rates: { T: 484, P: 303, M: 338, F: 1125 } },{ min: 0.70, max: 0.89, rates: { T: 441, P: 276, M: 308, F: 1025 } },{ min: 0.90, max: 0.99, rates: { T: 387, P: 243, M: 270, F: 900 } },{ min: 1.00, max: 1.49, rates: { T: 344, P: 216, M: 240, F: 800 } },{ min: 1.50, max: 1.99, rates: { T: 312, P: 195, M: 218, F: 725 } },{ min: 2.00, max: 2.99, rates: { T: 291, P: 182, M: 202, F: 675 } },{ min: 3.00, max: 3.99, rates: { T: 280, P: 175, M: 195, F: 650 } },{ min: 4.00, max: 4.99, rates: { T: 270, P: 168, M: 187, F: 625 } },{ min: 5.00, max: 9999, rates: { T: 248, P: 155, M: 172, F: 575 } }];
+    const ratesComm_Default = [{ min: 0.30, max: 0.49, rates: { T: 195, P: 82, M: 107, F: 384 } },{ min: 0.50, max: 0.99, rates: { T: 174, P: 73, M: 96, F: 343 } },{ min: 1.00, max: 1.49, rates: { T: 152, P: 65, M: 84, F: 301 } },{ min: 1.50, max: 1.99, rates: { T: 147, P: 63, M: 81, F: 291 } },{ min: 2.00, max: 2.99, rates: { T: 137, P: 58, M: 75, F: 270 } },{ min: 3.00, max: 3.99, rates: { T: 132, P: 55, M: 72, F: 259 } },{ min: 4.00, max: 4.99, rates: { T: 126, P: 53, M: 70, F: 249 } },{ min: 5.00, max: 9999, rates: { T: 111, P: 46, M: 61, F: 218 } }];
+    const ratesFancy_Default = [{ min: 1.00, max: 1.99, rates: { Full: 1300, Border: 0 } },{ min: 2.00, max: 2.99, rates: { Full: 1100, Border: 900 } },{ min: 3.00, max: 4.99, rates: { Full: 950, Border: 800 } },{ min: 5.00, max: 9999, rates: { Full: 800, Border: 700 } }];
 
-    const ratesComm_Default = [
-        { min: 0.30, max: 0.49, rates: { T: 195, P: 82, M: 107, F: 384 } },
-        { min: 0.50, max: 0.99, rates: { T: 174, P: 73, M: 96, F: 343 } },
-        { min: 1.00, max: 1.49, rates: { T: 152, P: 65, M: 84, F: 301 } },
-        { min: 1.50, max: 1.99, rates: { T: 147, P: 63, M: 81, F: 291 } },
-        { min: 2.00, max: 2.99, rates: { T: 137, P: 58, M: 75, F: 270 } },
-        { min: 3.00, max: 3.99, rates: { T: 132, P: 55, M: 72, F: 259 } },
-        { min: 4.00, max: 4.99, rates: { T: 126, P: 53, M: 70, F: 249 } },
-        { min: 5.00, max: 9999, rates: { T: 111, P: 46, M: 61, F: 218 } } 
-    ];
-
-    const ratesFancy_Default = [
-        { min: 1.00, max: 1.99, rates: { Full: 1300, Border: 1150 } },
-        { min: 2.00, max: 2.99, rates: { Full: 1100, Border: 900 } },
-        { min: 3.00, max: 4.99, rates: { Full: 950, Border: 800 } },
-        { min: 5.00, max: 9999, rates: { Full: 800, Border: 700 } }
-    ];
-
-    let currentRates = []; 
-    let entries = [];
-    let currentCategory = "3EX"; 
-    
-    // --- VARIABLES FOR SETTINGS EDITING ---
-    let editingCategory = "3EX";
-    let editingRates = [];
+    let currentRates = [], entries = [], workerList = [], currentCategory = "3EX", editingCategory = "3EX", editingRates = [];
 
     window.onload = function() {
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-        }
+        if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark-mode');
+        
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const d = String(today.getDate()).padStart(2, '0');
+        const todayStr = `${y}-${m}-${d}`;
+        
+        document.getElementById('entryDate').value = todayStr;
+        document.getElementById('reportStartDate').value = todayStr;
+        document.getElementById('reportEndDate').value = todayStr;
+
         const savedData = localStorage.getItem('diamondData');
         if (savedData) entries = JSON.parse(savedData);
         
+        initWorkers();
         selectType('3EX'); 
         renderTable();
         updateSuggestions();
     };
 
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+    function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled'); }
+
+    // --- WORKER REPORT LOGIC ---
+    function openWorkerReportView() { document.getElementById('mainView').style.display = 'none'; document.getElementById('workerReportView').style.display = 'block'; }
+    function closeWorkerReportView() { document.getElementById('workerReportView').style.display = 'none'; document.getElementById('mainView').style.display = 'block'; }
+
+    function generateSpecificReport() {
+        const name = document.getElementById('reportWorkerName').value.trim();
+        const s = document.getElementById('reportStartDate').value;
+        const e = document.getElementById('reportEndDate').value;
+        const tbody = document.getElementById('reportTableBody');
+        
+        if(!name || !s || !e) { alert("Please enter Name and Dates."); return; }
+
+        const d1 = new Date(s); d1.setHours(0,0,0,0);
+        const d2 = new Date(e); d2.setHours(23,59,59,999);
+
+        const filtered = entries.filter(item => {
+            const p = item.date.split('/'); 
+            const itemDate = new Date(p[2], p[1]-1, p[0]);
+            return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
+        });
+
+        tbody.innerHTML = '';
+        let total = 0;
+
+        if(filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px;">No entries found.</td></tr>';
+        } else {
+            filtered.sort((a,b) => {
+                const da = a.date.split('/'), db = b.date.split('/');
+                return new Date(da[2],da[1]-1,da[0]) - new Date(db[2],db[1]-1,db[0]);
+            });
+
+            filtered.forEach(r => {
+                total += r.total;
+                let c = (r.category==='Commercial')?'commercial-row':(r.category==='Fancy')?'fancy-row':'';
+                tbody.insertAdjacentHTML('beforeend', `<tr class="${c}"><td>${r.date}</td><td>${r.size.toFixed(2)}</td><td>${r.type}</td><td>${r.rate}</td><td>${r.qty}</td><td><strong>₹${r.total.toFixed(2)}</strong></td></tr>`);
+            });
+        }
+        document.getElementById('reportTotal').innerText = total.toFixed(2);
     }
 
-    // --- TYPE LOGIC ---
+    // --- NEW: DOWNLOAD SPECIFIC PDF ---
+    function downloadWorkerPDF() {
+        const name = document.getElementById('reportWorkerName').value.trim();
+        const s = document.getElementById('reportStartDate').value;
+        const e = document.getElementById('reportEndDate').value;
+        
+        if(!name || !s || !e) { alert("Please enter Name and Dates."); return; }
+
+        const d1 = new Date(s); d1.setHours(0,0,0,0);
+        const d2 = new Date(e); d2.setHours(23,59,59,999);
+
+        const filtered = entries.filter(item => {
+            const p = item.date.split('/'); 
+            const itemDate = new Date(p[2], p[1]-1, p[0]);
+            return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
+        });
+
+        if(filtered.length === 0) { alert("No entries found for this range."); return; }
+
+        filtered.sort((a,b) => {
+            const da = a.date.split('/'), db = b.date.split('/');
+            return new Date(da[2],da[1]-1,da[0]) - new Date(db[2],db[1]-1,db[0]);
+        });
+
+        let totalAmt = 0, totalQty = 0, totalSize = 0;
+
+        let h = `<html><head><title>Worker Report - ${name}</title><style>body{font-family:sans-serif;padding:20px}h1{text-align:center;border-bottom:2px solid #333}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:0.9em}th{background:#eee}.comm{background-color:#fff9c4 !important;-webkit-print-color-adjust:exact}.fancy{background-color:#f8d7da !important;-webkit-print-color-adjust:exact}</style></head><body>`;
+        
+        h += `<h1>💎 Salary Report</h1><center><h3>👤 ${name}</h3>(${s.split('-').reverse().join('/')} to ${e.split('-').reverse().join('/')})</center>`;
+        
+        h += `<table><thead><tr><th>Date</th><th>Type</th><th>Size</th><th>Rate</th><th>Qty</th><th>Total</th></tr></thead><tbody>`;
+
+        filtered.forEach(r => {
+            totalAmt += r.total; totalQty += r.qty; totalSize += r.size;
+            let bg = (r.category === 'Commercial') ? 'class="comm"' : (r.category === 'Fancy') ? 'class="fancy"' : '';
+            h += `<tr ${bg}><td>${r.date}</td><td>${r.type}</td><td>${r.size.toFixed(2)}</td><td>${r.rate}</td><td>${r.qty}</td><td>${r.total.toFixed(2)}</td></tr>`;
+        });
+
+        h += `</tbody><tfoot><tr><td colspan="2" align="right"><b>Totals:</b></td><td><b>${totalSize.toFixed(2)} Cts</b></td><td>-</td><td><b>${totalQty} Pcs</b></td><td><b>₹${totalAmt.toFixed(2)}</b></td></tr></tfoot></table>`;
+        
+        h += `<h2 align="right">Grand Total: ₹${totalAmt.toFixed(2)}</h2><script>window.print()<\/script></body></html>`;
+
+        const w = window.open('', '_blank'); w.document.write(h); w.document.close();
+    }
+
+    // --- WORKER MANAGEMENT ---
+    function initWorkers() {
+        const saved = localStorage.getItem('workerList');
+        if (saved) { workerList = JSON.parse(saved); } 
+        else { for(let i=1; i<=35; i++) { workerList.push({ name: `Worker ${i}`, defaultType: 'T' }); } saveWorkers(); }
+        updateSuggestions();
+    }
+    function saveWorkers() { localStorage.setItem('workerList', JSON.stringify(workerList)); updateSuggestions(); }
+    function openWorkerModal() { document.getElementById('workerModal').style.display = 'flex'; renderWorkerManagerList(); }
+    function closeWorkerModal() { document.getElementById('workerModal').style.display = 'none'; }
+    function renderWorkerManagerList() {
+        const c = document.getElementById('workerListContainer'); c.innerHTML = '';
+        const opts = ['T', 'P', 'M', 'F', 'TP', 'Full', 'Border'];
+        workerList.forEach((w, i) => {
+            let oH = opts.map(o => `<option value="${o}" ${w.defaultType === o ? 'selected' : ''}>${o}</option>`).join('');
+            c.insertAdjacentHTML('beforeend', `<div class="worker-row"><div><div class="worker-label">Name</div><input type="text" value="${w.name}" onchange="updateWorkerName(${i}, this.value)"></div><div><div class="worker-label">Default Type</div><select onchange="updateWorkerType(${i}, this.value)">${oH}</select></div></div>`);
+        });
+    }
+    function updateWorkerName(i, n) { if(n.trim()){ workerList[i].name=n; saveWorkers(); } }
+    function updateWorkerType(i, t) { workerList[i].defaultType=t; saveWorkers(); }
+    function checkWorkerType() {
+        const val = document.getElementById('workerName').value;
+        const w = workerList.find(x => x.name.toLowerCase() === val.toLowerCase());
+        if(w) {
+            const sel = document.getElementById('diamondType');
+            if(Array.from(sel.options).some(o => o.value === w.defaultType)) { sel.value = w.defaultType; updateRatePreview(); }
+        }
+    }
+
+    // --- MAIN APP LOGIC ---
     function openTypeModal() { document.getElementById('typeModal').style.display = 'flex'; }
     function closeTypeModal() { document.getElementById('typeModal').style.display = 'none'; }
-
-    function selectType(type) {
-        currentCategory = type;
-        document.getElementById('currentTypeLabel').innerText = (type === 'Commercial') ? "COMM" : type;
-        
-        document.querySelectorAll('.type-option').forEach(el => el.classList.remove('active'));
-        if(type === '3EX') document.getElementById('opt3EX').classList.add('active');
-        if(type === 'Commercial') document.getElementById('optComm').classList.add('active');
-        if(type === 'Fancy') document.getElementById('optFancy').classList.add('active');
-
-        // Update Dropdown & Include TP for 3EX/Comm
-        const typeSelect = document.getElementById('diamondType');
-        typeSelect.innerHTML = ''; 
-        if (type === 'Fancy') {
-            typeSelect.innerHTML = '<option value="Full">Full</option><option value="Border">Border</option>';
-        } else {
-            typeSelect.innerHTML = '<option value="T">T</option><option value="P">P</option><option value="M">M</option><option value="F">F</option><option value="TP">TP (T+P)</option>';
-        }
-
-        currentRates = getRatesForCategory(type);
-        updateRatePreview(); 
-        closeTypeModal();
+    function selectType(t) {
+        currentCategory = t; document.getElementById('currentTypeLabel').innerText = (t==='Commercial')?"COMM":t;
+        document.querySelectorAll('.type-option').forEach(e=>e.classList.remove('active'));
+        if(t==='3EX')document.getElementById('opt3EX').classList.add('active');
+        if(t==='Commercial')document.getElementById('optComm').classList.add('active');
+        if(t==='Fancy')document.getElementById('optFancy').classList.add('active');
+        const sel = document.getElementById('diamondType');
+        sel.innerHTML = (t==='Fancy')?'<option value="Full">Full</option><option value="Border">Border</option>':'<option value="T">T</option><option value="P">P</option><option value="M">M</option><option value="F">F</option><option value="TP">TP (T+P)</option>';
+        currentRates = getRatesForCategory(t); updateRatePreview(); closeTypeModal();
     }
-
-    function getRatesForCategory(cat) {
-        let storageKey = 'rates_' + cat.toLowerCase();
-        let defaultData;
-        if(cat === '3EX') defaultData = rates3EX_Default;
-        else if(cat === 'Commercial') defaultData = ratesComm_Default;
-        else defaultData = ratesFancy_Default;
-        
-        const saved = localStorage.getItem(storageKey);
-        return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData));
+    function getRatesForCategory(c) {
+        const s = localStorage.getItem('rates_'+c.toLowerCase());
+        return s ? JSON.parse(s) : JSON.parse(JSON.stringify((c==='3EX')?rates3EX_Default:(c==='Commercial')?ratesComm_Default:ratesFancy_Default));
     }
-
-    // --- CORE LOGIC ---
-    function findRate(size, type) {
-        const row = currentRates.find(r => size >= r.min && size <= r.max);
-        if (!row) return 0;
-        
-        // AUTO-CALCULATE TP (T + P)
-        if (type === 'TP') {
-            return (row.rates['T'] || 0) + (row.rates['P'] || 0);
-        }
-        
-        return row.rates[type] || 0;
+    function findRate(s, t) {
+        const r = currentRates.find(x => s >= x.min && s <= x.max);
+        if(!r) return 0;
+        return (t==='TP') ? (r.rates['T']||0)+(r.rates['P']||0) : (r.rates[t]||0);
     }
-
     function updateRatePreview() {
-        const size = parseFloat(document.getElementById('diamondSize').value);
-        const type = document.getElementById('diamondType').value;
-        const display = document.getElementById('rate-display');
-
-        if (size && type) {
-            const rate = findRate(size, type);
-            if (rate > 0) {
-                display.innerText = `Rate: ₹${rate} (${currentCategory})`;
-                display.style.color = document.body.classList.contains('dark-mode') ? "#4dabf7" : "green";
-            } else {
-                display.innerText = "Size not found";
-                display.style.color = "#dc3545";
-            }
-        }
+        const s = parseFloat(document.getElementById('diamondSize').value), t = document.getElementById('diamondType').value;
+        const d = document.getElementById('rate-display');
+        if(s && t) { const r = findRate(s,t); d.innerText = r>0 ? `Rate: ₹${r} (${currentCategory})` : "Size not found"; d.style.color = r>0 ? (document.body.classList.contains('dark-mode')?"#4dabf7":"green") : "#dc3545"; }
     }
-
     function addEntry() {
-        const name = document.getElementById('workerName').value.trim();
-        const size = parseFloat(document.getElementById('diamondSize').value);
-        const type = document.getElementById('diamondType').value;
-        let qty = parseFloat(document.getElementById('quantity').value);
-        if (!qty || qty <= 0) qty = 1;
+        const raw = document.getElementById('entryDate').value; 
+        if (!raw) { alert("Select Date"); return; }
+        const [y, m, d] = raw.split('-');
+        const fDate = `${d}/${m}/${y}`; 
 
-        if (!name || !size) { alert("Fill worker name and size"); return; }
-        const rate = findRate(size, type);
-        if (rate === 0) { alert(`Invalid Size for ${currentCategory} rates.`); return; }
+        const nm = document.getElementById('workerName').value.trim();
+        const sz = parseFloat(document.getElementById('diamondSize').value);
+        const tp = document.getElementById('diamondType').value;
+        let qt = parseFloat(document.getElementById('quantity').value)||1;
+        if(!nm || !sz) { alert("Fill name and size"); return; }
+        const rt = findRate(sz, tp); if(rt===0) { alert("Invalid Size/Rate"); return; }
         
-        const total = size * rate * qty;
-        const today = new Date().toLocaleDateString('en-IN'); 
-
-        entries.push({ 
-            id: Date.now(), date: today, name: name, size: size, type: type, rate: rate, qty: qty, total: total, category: currentCategory 
-        });
-        
+        entries.push({ id: Date.now(), date: fDate, name: nm, size: sz, type: tp, rate: rt, qty: qt, total: sz*rt*qt, category: currentCategory });
         saveData(); renderTable(); updateSuggestions();
-        document.getElementById('diamondSize').value = '';
-        document.getElementById('quantity').value = '1';
+        document.getElementById('diamondSize').value = ''; document.getElementById('quantity').value = '1';
     }
-
-    function deleteEntry(id) {
-        if(confirm("Remove?")) { entries = entries.filter(e => e.id !== id); saveData(); renderTable(); updateSuggestions(); }
-    }
+    function deleteEntry(id) { if(confirm("Remove?")) { entries=entries.filter(e=>e.id!==id); saveData(); renderTable(); updateSuggestions(); } }
     function saveData() { localStorage.setItem('diamondData', JSON.stringify(entries)); }
     function updateSuggestions() {
         const dl = document.getElementById('nameSuggestions'); dl.innerHTML = ''; 
-        [...new Set(entries.map(e => e.name))].forEach(n => { const o = document.createElement('option'); o.value = n; dl.appendChild(o); });
+        workerList.forEach(w => { const o = document.createElement('option'); o.value = w.name; dl.appendChild(o); });
     }
-
     function renderTable() {
-        const tb = document.getElementById('salaryTableBody'); tb.innerHTML = ''; let gt = 0;
+        const tb = document.getElementById('salaryTableBody'); tb.innerHTML=''; let gt=0;
         [...entries].reverse().forEach(e => {
-            gt += e.total;
-            let c = '';
-            if(e.category === 'Commercial') c = 'commercial-row';
-            if(e.category === 'Fancy') c = 'fancy-row';
+            gt+=e.total;
+            let c = (e.category==='Commercial')?'commercial-row':(e.category==='Fancy')?'fancy-row':'';
             tb.insertAdjacentHTML('beforeend', `<tr class="${c}"><td>${e.date}</td><td>${e.name}</td><td>${e.size.toFixed(2)}</td><td>${e.type}</td><td>${e.rate}</td><td>${e.qty}</td><td><strong>₹${e.total.toFixed(2)}</strong></td><td><button class="delete-btn" onclick="deleteEntry(${e.id})">X</button></td></tr>`);
         });
         document.getElementById('grandTotal').innerText = gt.toFixed(2);
     }
 
-    // --- SETTINGS LOGIC (FIXED TABLE) ---
-    function openSettings() {
-        // Start by editing the current category
-        switchSettingsTab(currentCategory);
-        document.getElementById('settingsModal').style.display = 'flex';
-    }
-    function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
-
-    function switchSettingsTab(type) {
-        editingCategory = type;
-        editingRates = getRatesForCategory(type);
-        
-        // Update Tabs UI
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        if(type === '3EX') document.getElementById('tab3EX').classList.add('active');
-        if(type === 'Commercial') document.getElementById('tabCommercial').classList.add('active');
-        if(type === 'Fancy') document.getElementById('tabFancy').classList.add('active');
-
-        renderSettingsTable();
-    }
-
-    function renderSettingsTable() {
-        const list = document.getElementById('ratesList');
-        const header = document.getElementById('rateHeaderRow');
-        list.innerHTML = '';
-        
-        let columns = (editingCategory === 'Fancy') ? ['Full', 'Border'] : ['T', 'P', 'M', 'F'];
-
-        // Grid Layout: 1.2fr for Size, then equal for types
-        let colTemplate = `1.2fr repeat(${columns.length}, 1fr)`;
-        header.style.gridTemplateColumns = colTemplate;
-        header.innerHTML = `<span>Size (Cts)</span>` + columns.map(c => `<span>${c}</span>`).join('');
-
-        editingRates.forEach((row, index) => {
-            let inputs = '';
-            columns.forEach(col => {
-                inputs += `<div class="st-cell"><input type="number" class="rate-input" id="r-${index}-${col}" value="${row.rates[col]}"></div>`;
-            });
-            
-            const html = `
-                <div class="rate-data-row" style="grid-template-columns: ${colTemplate};">
-                    <div class="st-cell range-cell">
-                        <input type="number" step="0.01" class="range-input" id="min-${index}" value="${row.min}">
-                        <input type="number" step="0.01" class="range-input" id="max-${index}" value="${row.max}">
-                    </div>
-                    ${inputs}
-                </div>
-            `;
-            list.insertAdjacentHTML('beforeend', html);
+    // --- SETTINGS, IMPORT, EXPORT, PDF ---
+    function openSettings(){ switchSettingsTab(currentCategory); document.getElementById('settingsModal').style.display='flex'; }
+    function closeSettings(){ document.getElementById('settingsModal').style.display='none'; }
+    function switchSettingsTab(t){
+        editingCategory=t; editingRates=getRatesForCategory(t);
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        if(t==='3EX')document.getElementById('tab3EX').classList.add('active'); if(t==='Commercial')document.getElementById('tabCommercial').classList.add('active'); if(t==='Fancy')document.getElementById('tabFancy').classList.add('active');
+        const l=document.getElementById('ratesList'), h=document.getElementById('rateHeaderRow'); l.innerHTML='';
+        let cols=(t==='Fancy')?['Full','Border']:['T','P','M','F'];
+        let colT = `1.2fr repeat(${cols.length}, 1fr)`; h.style.gridTemplateColumns = colT;
+        h.innerHTML = `<span>Size (Cts)</span>` + cols.map(c=>`<span>${c}</span>`).join('');
+        editingRates.forEach((r,i) => {
+            let inps = cols.map(c => `<div class="st-cell"><input type="number" class="rate-input" id="r-${i}-${c}" value="${r.rates[c]}"></div>`).join('');
+            l.insertAdjacentHTML('beforeend', `<div class="rate-data-row" style="grid-template-columns:${colT}"><div class="st-cell range-cell"><input type="number" step="0.01" class="range-input" id="min-${i}" value="${r.min}"><input type="number" step="0.01" class="range-input" id="max-${i}" value="${r.max}"></div>${inps}</div>`);
         });
     }
-
-    function saveRates() {
-        let columns = (editingCategory === 'Fancy') ? ['Full', 'Border'] : ['T', 'P', 'M', 'F'];
-        
-        editingRates.forEach((row, index) => {
-            row.min = parseFloat(document.getElementById(`min-${index}`).value) || 0;
-            row.max = parseFloat(document.getElementById(`max-${index}`).value) || 0;
-            columns.forEach(col => {
-                row.rates[col] = parseInt(document.getElementById(`r-${index}-${col}`).value) || 0;
-            });
-        });
-
-        let storageKey = 'rates_' + editingCategory.toLowerCase();
-        localStorage.setItem(storageKey, JSON.stringify(editingRates));
-        
-        if(editingCategory === currentCategory) {
-            currentRates = JSON.parse(JSON.stringify(editingRates));
-            updateRatePreview();
-        }
-        
-        alert("Saved " + editingCategory + " Rates!");
+    function saveRates(){
+        let cols=(editingCategory==='Fancy')?['Full','Border']:['T','P','M','F'];
+        editingRates.forEach((r,i) => { r.min=parseFloat(document.getElementById(`min-${i}`).value)||0; r.max=parseFloat(document.getElementById(`max-${i}`).value)||0; cols.forEach(c => r.rates[c]=parseInt(document.getElementById(`r-${i}-${c}`).value)||0); });
+        localStorage.setItem('rates_'+editingCategory.toLowerCase(), JSON.stringify(editingRates));
+        if(editingCategory===currentCategory) { currentRates=JSON.parse(JSON.stringify(editingRates)); updateRatePreview(); }
         closeSettings();
     }
-
-    function resetRates() {
-        if(confirm("Reset defaults for " + editingCategory + "?")) {
-            let def;
-            if(editingCategory === '3EX') def = rates3EX_Default;
-            else if(editingCategory === 'Commercial') def = ratesComm_Default;
-            else def = ratesFancy_Default;
-            
-            editingRates = JSON.parse(JSON.stringify(def));
-            renderSettingsTable();
-        }
-    }
-
-    // --- CLEAR/DATE MODALS ---
-    function openClearModal() { document.getElementById('clearModal').style.display = 'flex'; }
-    function closeClearModal() { document.getElementById('clearModal').style.display = 'none'; }
+    function resetRates() { if(confirm("Reset?")) { editingRates=JSON.parse(JSON.stringify((editingCategory==='3EX')?rates3EX_Default:(editingCategory==='Commercial')?ratesComm_Default:ratesFancy_Default)); renderSettingsTable(); } }
+    
+    function openDateModal(){document.getElementById('dateModal').style.display='flex';} function closeDateModal(){document.getElementById('dateModal').style.display='none';}
+    function openClearModal(){document.getElementById('clearModal').style.display='flex';} function closeClearModal(){document.getElementById('clearModal').style.display='none';}
     function performClear() {
-        const s = document.getElementById('clearStart').value;
-        const e = document.getElementById('clearEnd').value;
-        if (!s && !e) {
-            if(confirm("Delete ALL data?")) { entries=[]; saveData(); renderTable(); updateSuggestions(); closeClearModal(); }
-            return;
-        }
-        if (s && e) {
-            const d1 = new Date(s); d1.setHours(0,0,0,0);
-            const d2 = new Date(e); d2.setHours(23,59,59,999);
-            const before = entries.length;
-            entries = entries.filter(i => { const p = i.date.split('/'); const d = new Date(p[2], p[1]-1, p[0]); return !(d >= d1 && d <= d2); });
-            if(before - entries.length > 0) { saveData(); renderTable(); updateSuggestions(); closeClearModal(); alert("Deleted."); }
-            else alert("No entries in range.");
-        } else alert("Select both dates.");
-    }
-    function openDateModal() { document.getElementById('dateModal').style.display = 'flex'; }
-    function closeDateModal() { document.getElementById('dateModal').style.display = 'none'; }
-
-    // --- EXPORT/IMPORT ---
-    function exportToCSV() {
-        if (!entries.length) { alert("No data!"); return; }
-        let csv = "Date,Name,Category,Size,Type,Rate,Qty,Total\n";
-        entries.forEach(e => csv += `${e.date},${e.name},${e.category||'3EX'},${e.size},${e.type},${e.rate},${e.qty},${e.total}\n`);
-        const a = document.createElement("a"); a.href = encodeURI("data:text/csv;charset=utf-8," + csv); a.download = "Diamonds.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    }
-    function importCSV(input) {
-        const f = input.files[0]; if (!f) return;
-        const r = new FileReader(); r.onload = e => {
-            const l = e.target.result.split("\n"); if(l.length < 2 || !confirm("Merge?")) return;
-            for(let i=1; i<l.length; i++) {
-                const c = l[i].split(",");
-                if(c.length >= 8) entries.push({ id:Date.now()+i, date:c[0], name:c[1], category:c[2], size:parseFloat(c[3]), type:c[4], rate:parseInt(c[5]), qty:parseInt(c[6]), total:parseFloat(c[7]) });
-                else if(c.length === 7) entries.push({ id:Date.now()+i, date:c[0], name:c[1], category:'3EX', size:parseFloat(c[2]), type:c[3], rate:parseInt(c[4]), qty:parseInt(c[5]), total:parseFloat(c[6]) });
-            }
-            saveData(); renderTable(); updateSuggestions(); alert("Done"); input.value='';
-        }; r.readAsText(f);
-    }
-
-    // --- PDF ---
-    function parseDateStr(s) { const p=s.split('/'); return new Date(p[2],p[1]-1,p[0]); }
-    function generateReport() {
-        if (!entries.length) { alert("No data!"); return; }
-        const s = document.getElementById('startDate').value; const e = document.getElementById('endDate').value;    
-        let d = entries; let tr = "(All Time)";
+        const s = document.getElementById('clearStart').value, e = document.getElementById('clearEnd').value;
+        if (!s && !e) { if(confirm("Delete ALL?")) { entries=[]; saveData(); renderTable(); updateSuggestions(); closeClearModal(); } return; }
         if (s && e) {
             const d1 = new Date(s); d1.setHours(0,0,0,0); const d2 = new Date(e); d2.setHours(23,59,59,999);
-            tr = `(${d1.toLocaleDateString('en-IN')} to ${d2.toLocaleDateString('en-IN')})`;
+            entries = entries.filter(i => { const p = i.date.split('/'); const d = new Date(p[2], p[1]-1, p[0]); return !(d >= d1 && d <= d2); });
+            saveData(); renderTable(); updateSuggestions(); closeClearModal();
+        } else alert("Select both dates.");
+    }
+    function exportToCSV() {
+        if(!entries.length) return alert("No data");
+        let csv = "Date,Name,Category,Size,Type,Rate,Qty,Total\n" + entries.map(e=>`${e.date},${e.name},${e.category},${e.size},${e.type},${e.rate},${e.qty},${e.total}`).join('\n');
+        const a = document.createElement("a"); a.href = encodeURI("data:text/csv;charset=utf-8,"+csv); a.download="diamonds.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }
+    function importCSV(input) {
+        const f = input.files[0]; if(!f) return;
+        const r = new FileReader(); r.onload = e => {
+            const l = e.target.result.split(/\r\n|\n/); if(l.length<2 || !confirm("Merge?")) return;
+            for(let i=1; i<l.length; i++) {
+                const c = l[i].trim().split(","); if(c.length>=7) entries.push({ id:Date.now()+i, date:c[0], name:c[1], category:c.length>=8?c[2]:'3EX', size:parseFloat(c[c.length>=8?3:2]), type:c[c.length>=8?4:3], rate:parseInt(c[c.length>=8?5:4]), qty:parseInt(c[c.length>=8?6:5]), total:parseFloat(c[c.length>=8?7:6]) });
+            }
+            saveData(); renderTable(); alert("Done"); input.value='';
+        }; r.readAsText(f);
+    }
+    function generateReport() {
+        if (!entries.length) { alert("No data!"); return; }
+        const s = document.getElementById('startDate').value, e = document.getElementById('endDate').value;
+        let d = entries, tr = "(All Time)";
+        if (s && e) {
+            const d1 = new Date(s); d1.setHours(0,0,0,0); const d2 = new Date(e); d2.setHours(23,59,59,999);
             d = entries.filter(i => { const x = parseDateStr(i.date); return x >= d1 && x <= d2; });
             if(!d.length) { alert("No entries"); return; }
-        } else if (s || e) { alert("Select both"); return; }
-        
+            tr = `(${s.split('-').reverse().join('/')} to ${e.split('-').reverse().join('/')})`;
+        } else if(s||e) { alert("Select both"); return; }
         closeDateModal();
         const names = [...new Set(d.map(i => i.name))];
         let h = `<html><head><title>Report</title><style>body{font-family:sans-serif;padding:20px}h1{text-align:center;border-bottom:2px solid #333}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:0.9em}th{background:#eee}.comm{background-color:#fff9c4 !important;-webkit-print-color-adjust:exact}.fancy{background-color:#f8d7da !important;-webkit-print-color-adjust:exact}</style></head><body><h1>💎 Salary Report</h1><center>${tr}</center>`;
-        
         let gt = 0;
         names.forEach(n => {
-            const wData = d.filter(i => i.name === n);
-            let wt = 0;
+            const wData = d.filter(i => i.name === n); let wt = 0; let wQty = 0; let wSize = 0;
             h += `<h3>👤 ${n}</h3><table><thead><tr><th>Date</th><th>Type</th><th>Size</th><th>Rate</th><th>Qty</th><th>Total</th></tr></thead><tbody>`;
             wData.forEach(r => {
-                wt += r.total;
-                let bg = '', lbl = '';
-                if(r.category === 'Commercial') { bg = 'class="comm"'; lbl = '(Comm)'; }
-                if(r.category === 'Fancy') { bg = 'class="fancy"'; lbl = '(Fancy)'; }
-                h += `<tr ${bg}><td>${r.date}</td><td>${r.type} ${lbl}</td><td>${r.size.toFixed(2)}</td><td>${r.rate}</td><td>${r.qty}</td><td>${r.total.toFixed(2)}</td></tr>`;
+                wt += r.total; wQty += r.qty; wSize += r.size;
+                let bg = (r.category === 'Commercial') ? 'class="comm"' : (r.category === 'Fancy') ? 'class="fancy"' : '';
+                h += `<tr ${bg}><td>${r.date}</td><td>${r.type}</td><td>${r.size.toFixed(2)}</td><td>${r.rate}</td><td>${r.qty}</td><td>${r.total.toFixed(2)}</td></tr>`;
             });
-            h += `</tbody><tfoot><tr><td colspan="5" align="right"><b>Total:</b></td><td><b>₹${wt.toFixed(2)}</b></td></tr></tfoot></table>`;
+            h += `</tbody><tfoot><tr><td colspan="2" align="right"><b>Totals:</b></td><td><b>${wSize.toFixed(2)} Cts</b></td><td>-</td><td><b>${wQty} Pcs</b></td><td><b>₹${wt.toFixed(2)}</b></td></tr></tfoot></table>`;
             gt += wt;
         });
         h += `<h2 align="right">Grand Total: ₹${gt.toFixed(2)}</h2><script>window.print()<\/script></body></html>`;
         const w = window.open('', '_blank'); w.document.write(h); w.document.close();
     }
+    function parseDateStr(s) { const p=s.split('/'); return new Date(p[2],p[1]-1,p[0]); }
 </script>
 
 </body>
 </html>
-
-
