@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0056b3">
-    <link rel="apple-touch-icon" href="diamond-logo-v1.png">
+    <link rel="apple-touch-icon" href="diamond-logo-v2.png">
     <style>
         :root {
             /* --- COLORS --- */
@@ -58,67 +58,96 @@
             flex-direction: column;
         }
 
-        /* --- SPLASH SCREEN STYLES --- */
+        /* --- PROFESSIONAL SPLASH SCREEN (V10) --- */
         #splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #0056b3, #004494);
+            /* Premium Deep Blue Radial Gradient */
+            background: radial-gradient(circle at center, #0f5abd 0%, #002a5c 100%);
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
-            transition: opacity 0.6s ease-out, visibility 0.6s;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
         }
 
+        /* Glowing Diamond Logo */
         .splash-logo {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            animation: pulse-diamond 2s infinite;
+            font-size: 5.5rem;
+            margin-bottom: 15px;
+            /* Gold/White Gradient Text for the Diamond */
+            background: linear-gradient(135deg, #ffffff 30%, #89c4f4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /* Soft Glow Effect */
+            filter: drop-shadow(0 0 25px rgba(137, 196, 244, 0.5));
+            animation: float-diamond 3s ease-in-out infinite;
         }
 
         .splash-title {
-            font-size: 2rem;
-            font-weight: bold;
-            letter-spacing: 1px;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: 2px; /* Professional spacing */
+            text-transform: uppercase;
             margin-bottom: 5px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            background: linear-gradient(to right, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .splash-subtitle {
-            font-size: 1rem;
-            opacity: 0.8;
-            margin-bottom: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0.7;
+            letter-spacing: 4px; /* Cinematic subtitle spacing */
+            text-transform: uppercase;
+            margin-bottom: 50px;
         }
 
-        .loader {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top: 4px solid white;
-            animation: spin 1s linear infinite;
+        /* Sleek Loading Bar instead of Spinner */
+        .loading-container {
+            width: 180px;
+            height: 4px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-bar {
+            width: 50%;
+            height: 100%;
+            background-color: #4dabf7; /* Bright Blue */
+            position: absolute;
+            border-radius: 10px;
+            animation: load-slide 1.5s infinite ease-in-out;
+            box-shadow: 0 0 10px #4dabf7;
         }
 
         .splash-footer {
             position: absolute;
             bottom: 30px;
-            font-size: 0.8rem;
-            opacity: 0.6;
+            font-size: 0.75rem;
+            opacity: 0.5;
+            letter-spacing: 1px;
+            font-family: monospace;
         }
 
-        @keyframes pulse-diamond {
-            0% { transform: scale(1); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
-            50% { transform: scale(1.1); text-shadow: 0 0 25px rgba(255,255,255,0.6); }
-            100% { transform: scale(1); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        /* Animations */
+        @keyframes float-diamond {
+            0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 25px rgba(137, 196, 244, 0.5)); }
+            50% { transform: translateY(-10px) scale(1.05); filter: drop-shadow(0 0 40px rgba(137, 196, 244, 0.8)); }
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes load-slide {
+            0% { left: -50%; }
+            100% { left: 100%; }
         }
 
         /* --- MAIN CONTAINER --- */
@@ -397,16 +426,113 @@
             .report-view-btn { grid-column: 1 / -1; } 
             .summary-btn { grid-column: 1 / -1; }
         }
+
+        /* ========================================= */
+/* === MODERN MOBILE APP THEME (V9.0) === */
+/* ========================================= */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+        background-color: #f0f2f5; /* App-like gray background */
+    }
+
+    .container {
+        padding: 20px 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+    }
+
+    /* Clean Header */
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    .card-header-actions {
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    /* Layout Adjustments */
+    .input-grid {
+        display: flex; /* Better flow than grid on mobile */
+        flex-direction: column;
+        gap: 12px;
+        padding: 20px;
+    }
+
+    /* Make Date/Worker/Size/Type/Qty consistent width */
+    .form-group { width: 100%; }
+
+    /* --- BUTTON LAYOUT (The specific request) --- */
+    .action-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two columns */
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    /* 1. Advance & 2. Bank are side-by-side (Top Row) */
+    .advance-btn, .bank-btn {
+        grid-column: span 1; /* Take 1 slot each */
+        padding: 14px;
+        font-size: 0.85rem;
+    }
+
+    /* 3. Add to List (Middle - Big & Prominent) */
+    .add-btn {
+        grid-column: span 2; /* Take full width */
+        background: linear-gradient(135deg, #0056b3, #004494); /* Gradient makes it pop */
+        box-shadow: 0 4px 15px rgba(0, 86, 179, 0.4); /* Nice glow */
+        padding: 16px;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* 4. Report & 5. Sheet (Bottom Row) */
+    .report-view-btn, .summary-btn {
+        grid-column: span 1;
+        padding: 14px;
+        font-size: 0.85rem;
+    }
+
+    /* Table Styling for Mobile */
+    .table-container {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        background: white;
+    }
+    
+    /* Footer Action Panel */
+    .report-panel {
+        gap: 10px;
+        flex-direction: column; /* Stack buttons vertically for easy thumb reach */
+    }
+    
+    .action-btn-shared {
+        width: 100%;
+        padding: 16px; /* Fat buttons for thumbs */
+        font-size: 1rem;
+    }
+}
     </style>
 </head>
 <body>
 
 <div id="splash-screen">
     <i class="far fa-gem splash-logo"></i>
+    
     <div class="splash-title">CVD MANAGER</div>
-    <div class="splash-subtitle">Pro Edition</div>
-    <div class="loader"></div>
-    <div class="splash-footer">Developed by Akshat Dhanani</div>
+    <div class="splash-subtitle">PRO EDITION</div>
+    
+    <div class="loading-container">
+        <div class="loading-bar"></div>
+    </div>
+    
+    <div class="splash-footer">DESIGNED BY AKSHAT DHANANI</div>
 </div>
 
 <div class="container">
@@ -448,10 +574,14 @@
             <div id="rate-display" style="grid-column: 1/-1; font-style:italic; font-size:0.9em; margin-top:-5px;">Enter size...</div>
             
             <div class="action-group">
-                <button class="add-btn" id="addBtn" onclick="addEntry()">Add to List</button>
                 <button class="advance-btn" onclick="openAdvanceModal()">💸 Advance (Cash)</button>
+                
                 <button class="bank-btn" onclick="openBankModal()">🏦 Bank Transfer</button>
+                
+                <button class="add-btn" id="addBtn" onclick="addEntry()">Add to List</button>
+                
                 <button class="report-view-btn" onclick="openWorkerReportView()">📊 Worker Report</button>
+                
                 <button class="summary-btn" onclick="openSummaryModal()">📋 Net Salary Sheet</button>
             </div>
         </div>
@@ -688,7 +818,7 @@
             setTimeout(() => {
                 splash.style.visibility = 'hidden';
             }, 600);
-        }, 2500); // 2.5 Seconds delay
+        }, 2500); 
 
         if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark-mode');
         
@@ -711,11 +841,12 @@
         const savedBank = localStorage.getItem('bankData');
         if (savedBank) bankTransfers = JSON.parse(savedBank);
 
+        // --- NEW: PRESS ENTER IN SIZE BOX TO ADD ---
         document.getElementById("diamondSize").addEventListener("keydown", function(event) {
-        if (event.key === "Enter") {
-            event.preventDefault(); // Stops other actions
-            addEntry(); // Adds the diamond immediately
-        }
+            if (event.key === "Enter") {
+                event.preventDefault(); // Stop normal "Enter" behavior
+                addEntry(); // Trigger the Add button logic
+            }
         });
         
         initWorkers();
@@ -730,28 +861,48 @@
     function openWorkerReportView() { document.getElementById('mainView').style.display = 'none'; document.getElementById('workerReportView').style.display = 'block'; }
     function closeWorkerReportView() { document.getElementById('workerReportView').style.display = 'none'; document.getElementById('mainView').style.display = 'block'; }
 
+    // --- UPDATED REPORT VIEW LOGIC ---
     function generateSpecificReport() {
         const name = document.getElementById('reportWorkerName').value.trim();
         const s = document.getElementById('reportStartDate').value;
         const e = document.getElementById('reportEndDate').value;
         const tbody = document.getElementById('reportTableBody');
+        const totalSection = document.querySelector('#workerReportView .total-section');
         
         if(!name || !s || !e) { alert("Please enter Name and Dates."); return; }
 
         const d1 = new Date(s); d1.setHours(0,0,0,0);
         const d2 = new Date(e); d2.setHours(23,59,59,999);
 
+        // 1. Filter Work Entries
         const filtered = entries.filter(item => {
             const p = item.date.split('/'); 
             const itemDate = new Date(p[2], p[1]-1, p[0]);
             return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
         });
 
-        tbody.innerHTML = '';
-        let total = 0;
+        // 2. Filter Advances (Cash)
+        const workerAdvances = advances.filter(item => {
+            const p = item.date.split('/'); 
+            const itemDate = new Date(p[2], p[1]-1, p[0]);
+            return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
+        });
 
+        // 3. Filter Bank Transfers
+        const workerBank = bankTransfers.filter(item => {
+            const p = item.date.split('/'); 
+            const itemDate = new Date(p[2], p[1]-1, p[0]);
+            return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
+        });
+
+        tbody.innerHTML = '';
+        let totalWork = 0;
+        let totalAdv = 0;
+        let totalBank = 0;
+
+        // Calculate Work Total & Render Table
         if(filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px;">No entries found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px;">No work entries found for this period.</td></tr>';
         } else {
             filtered.sort((a,b) => {
                 const da = a.date.split('/'), db = b.date.split('/');
@@ -759,12 +910,34 @@
             });
 
             filtered.forEach(r => {
-                total += r.total;
+                totalWork += r.total;
                 let c = (r.category==='Commercial')?'commercial-row':(r.category==='Fancy')?'fancy-row':'';
                 tbody.insertAdjacentHTML('beforeend', `<tr class="${c}"><td>${r.date}</td><td>${r.size.toFixed(2)}</td><td>${r.type}</td><td>${r.rate}</td><td>${r.qty}</td><td><strong>₹${r.total.toFixed(2)}</strong></td></tr>`);
             });
         }
-        document.getElementById('reportTotal').innerText = total.toFixed(2);
+
+        // Calculate Deductions
+        workerAdvances.forEach(a => totalAdv += a.amount);
+        workerBank.forEach(b => totalBank += b.amount);
+
+        // Calculate Net Payable
+        const netPayable = totalWork - totalAdv - totalBank;
+        const netClass = netPayable >= 0 ? 'color:green' : 'color:red';
+
+        // 4. Update the Total Section UI
+        // We replace the simple text with a detailed summary block
+        totalSection.style.display = 'block'; // Ensure it's block to hold divs
+        totalSection.style.textAlign = 'right';
+        totalSection.innerHTML = `
+            <div style="display:flex; justify-content:flex-end; gap:30px; flex-wrap:wrap; font-size:1rem;">
+                <div>Total Work: <b>₹${totalWork.toFixed(2)}</b></div>
+                <div style="color:#d9534f">Cash Adv: <b>- ₹${totalAdv.toFixed(2)}</b></div>
+                <div style="color:#6f42c1">Bank Transfer: <b>- ₹${totalBank.toFixed(2)}</b></div>
+            </div>
+            <div style="margin-top:10px; border-top:2px solid #ddd; padding-top:10px; font-size:1.4rem; font-weight:bold; ${netClass}">
+                Net Payable: ₹${netPayable.toFixed(2)}
+            </div>
+        `;
     }
 
     // --- UPDATED ADVANCE LOGIC WITH HISTORY ---
@@ -911,12 +1084,13 @@
         closeBankModal();
     }
 
-    // --- NEW SUMMARY SHEET LOGIC ---
+    // --- NEW SUMMARY SHEET LOGIC WITH TOTALS ---
+    // --- NEW SUMMARY SHEET LOGIC WITH SPLIT TOTALS ---
     function openSummaryModal() {
         const tbody = document.getElementById('summaryTableBody');
         tbody.innerHTML = '';
 
-        // Gather all unique names from Work, Advances, Bank and Worker List
+        // Gather all unique names
         const allNames = new Set([
             ...entries.map(e => e.name),
             ...advances.map(a => a.name),
@@ -925,6 +1099,15 @@
         ]);
         
         const sortedNames = Array.from(allNames).sort();
+
+        // --- VARIABLES FOR GRAND TOTALS ---
+        let grandTotalWork = 0;
+        let grandTotalAdv = 0;
+        let grandTotalBank = 0;
+        
+        // Split Net Totals (Green vs Red)
+        let totalPayable = 0;   // Sum of positive amounts (Green)
+        let totalReceivable = 0; // Sum of negative amounts (Red)
 
         if (sortedNames.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; opacity:0.6">No data available.</td></tr>';
@@ -944,6 +1127,18 @@
             const netPayable = totalWork - totalAdv - totalBank;
             const netClass = netPayable >= 0 ? 'summary-positive' : 'summary-negative';
 
+            // --- ACCUMULATE TO GRAND TOTALS ---
+            grandTotalWork += totalWork;
+            grandTotalAdv += totalAdv;
+            grandTotalBank += totalBank;
+            
+            // SPLIT ACCUMULATION FOR NET PAYABLE
+            if (netPayable >= 0) {
+                totalPayable += netPayable;
+            } else {
+                totalReceivable += netPayable;
+            }
+
             tbody.insertAdjacentHTML('beforeend', `
                 <tr>
                     <td style="font-weight:bold;">${name}</td>
@@ -954,6 +1149,21 @@
                 </tr>
             `);
         });
+
+        // --- APPEND GRAND TOTAL ROW ---
+        // We display BOTH totals (Payable & Receivable) in the last cell
+        tbody.insertAdjacentHTML('beforeend', `
+            <tr style="background-color:var(--row-even); border-top: 2px solid var(--text-color); font-weight:bold; font-size:1.05em;">
+                <td style="text-align:right;">TOTAL:</td>
+                <td>₹${grandTotalWork.toFixed(2)}</td>
+                <td style="color:#d9534f">₹${grandTotalAdv.toFixed(2)}</td>
+                <td style="color:#6f42c1">₹${grandTotalBank.toFixed(2)}</td>
+                <td>
+                    <div style="color:green; border-bottom:1px solid #ccc; padding-bottom:2px;">Pay: ₹${totalPayable.toFixed(2)}</div>
+                    <div style="color:red; padding-top:2px;">Rec: ₹${totalReceivable.toFixed(2)}</div>
+                </td>
+            </tr>
+        `);
 
         document.getElementById('summaryModal').style.display = 'flex';
     }
@@ -1137,12 +1347,28 @@
         const sz = parseFloat(document.getElementById('diamondSize').value);
         const tp = document.getElementById('diamondType').value;
         let qt = parseFloat(document.getElementById('quantity').value)||1;
-        if(!nm || !sz) { alert("Fill name and size"); return; }
-        const rt = findRate(sz, tp); if(rt===0) { alert("Invalid Size/Rate"); return; }
         
+        // Basic Validation
+        if(!nm) { alert("Please enter Worker Name"); document.getElementById('workerName').focus(); return; }
+        if(!sz) { alert("Please enter Size"); document.getElementById('diamondSize').focus(); return; }
+        
+        const rt = findRate(sz, tp); 
+        if(rt===0) { alert("Rate not found for this Size/Type!"); return; }
+        
+        // Add to Array
         entries.push({ id: Date.now(), date: fDate, name: nm, size: sz, type: tp, rate: rt, qty: qt, total: sz*rt*qt, category: currentCategory });
-        saveData(); renderTable(); updateSuggestions();
-        document.getElementById('diamondSize').value = ''; document.getElementById('quantity').value = '1';
+        
+        // Save and Render
+        saveData(); 
+        renderTable(); 
+        updateSuggestions();
+        
+        // --- RAPID ENTRY RESET ---
+        document.getElementById('diamondSize').value = ''; // Clear Size only
+        document.getElementById('quantity').value = '1';   // Reset Qty to 1
+        
+        // KEEP FOCUS ON SIZE INPUT (So you can type next size immediately)
+        document.getElementById('diamondSize').focus(); 
     }
     function deleteEntry(id) { if(confirm("Remove?")) { entries=entries.filter(e=>e.id!==id); saveData(); renderTable(); updateSuggestions(); } }
     function saveData() { localStorage.setItem('diamondData', JSON.stringify(entries)); }
