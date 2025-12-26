@@ -58,6 +58,70 @@
             flex-direction: column;
         }
 
+        /* --- SPLASH SCREEN STYLES --- */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0056b3, #004494);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: opacity 0.6s ease-out, visibility 0.6s;
+        }
+
+        .splash-logo {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            animation: pulse-diamond 2s infinite;
+        }
+
+        .splash-title {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .splash-subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            animation: spin 1s linear infinite;
+        }
+
+        .splash-footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        @keyframes pulse-diamond {
+            0% { transform: scale(1); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+            50% { transform: scale(1.1); text-shadow: 0 0 25px rgba(255,255,255,0.6); }
+            100% { transform: scale(1); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- MAIN CONTAINER --- */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -113,7 +177,7 @@
             border-bottom: 2px solid var(--border); padding-bottom: 10px; font-size: 1.5rem;
         }
 
-        /* --- INPUT FORM (DESKTOP DEFAULT) --- */
+        /* --- INPUT FORM --- */
         .input-grid {
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -128,7 +192,7 @@
             width: 100%; box-sizing: border-box;
         }
         
-        /* Report Grid (Desktop) */
+        /* Report Grid */
         .report-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -140,27 +204,41 @@
         .action-group {
             grid-column: 1 / -1;
             display: flex;
-            gap: 200px;
+            gap: 8px; /* Reduced gap */
             margin-top: 10px;
+            flex-wrap: wrap; 
         }
 
         .add-btn {
             background-color: var(--primary); color: white; border: none;
-            padding: 14px; border-radius: 6px; font-size: 1rem; cursor: pointer;
-            font-weight: bold; flex: 1; 
+            padding: 12px; border-radius: 6px; font-size: 0.95rem; cursor: pointer;
+            font-weight: bold; flex: 1; min-width: 100px;
         }
         
         .report-view-btn {
             background-color: var(--secondary); color: white; border: none;
-            padding: 14px; border-radius: 6px; font-size: 1rem; cursor: pointer;
-            font-weight: bold; flex: 1; 
+            padding: 12px; border-radius: 6px; font-size: 0.95rem; cursor: pointer;
+            font-weight: bold; flex: 1; min-width: 100px;
+        }
+
+        /* ADVANCE & BANK BUTTONS */
+        .advance-btn {
+            background-color: #ffc107; color: #333; border: none;
+            padding: 12px; border-radius: 6px; font-size: 0.95rem; cursor: pointer;
+            font-weight: bold; flex: 1; min-width: 100px;
+        }
+        
+        .bank-btn {
+            background-color: #6f42c1; color: white; border: none;
+            padding: 12px; border-radius: 6px; font-size: 0.95rem; cursor: pointer;
+            font-weight: bold; flex: 1; min-width: 100px;
         }
 
         /* --- TABLE --- */
         .table-container {
             overflow-x: auto; margin-top: 20px; max-height: 400px;
             overflow-y: auto; border: 1px solid var(--border); border-radius: 5px;
-            -webkit-overflow-scrolling: touch; /* Smooth scroll on mobile */
+            -webkit-overflow-scrolling: touch; 
         }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); color: var(--text-color); }
@@ -196,11 +274,32 @@
         .delete-btn { background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
         .footer { text-align: center; margin-top: 40px; padding: 10px; opacity: 0.6; font-size: 0.8rem; border-top: 1px solid var(--border); }
 
-        /* --- MODALS --- */
+        /* --- MODALS FIXED LAYOUT --- */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 2000; padding: 20px; box-sizing: border-box; }
-        .modal-content { background-color: var(--modal-bg); padding: 20px; border-radius: 12px; width: 100%; max-width: 500px; max-height: 85vh; overflow-y: auto; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .modal-actions { margin-top: 25px; display: flex; flex-direction: column; gap: 10px; }
+        
+        /* Flex Layout for Modals */
+        .modal-content { 
+            background-color: var(--modal-bg); 
+            border-radius: 12px; 
+            width: 100%; 
+            max-width: 500px; 
+            max-height: 85vh; 
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+        }
+        
+        /* Fixed Header & Footer areas */
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 10px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        .modal-actions { padding: 15px 20px 20px 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border); flex-shrink: 0; background: var(--modal-bg); }
+        
+        /* Scrollable Content Area */
+        .modal-scrollable-body {
+            padding: 10px 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
         .save-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1rem; }
         .reset-btn { background: #6c757d; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; }
         .danger-btn { background: #dc3545; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
@@ -211,11 +310,11 @@
         .type-option:hover { border-color: var(--primary); }
         .type-option.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .settings-tabs { display: flex; gap: 5px; margin-bottom: 15px; background: var(--row-even); padding: 5px; border-radius: 8px; }
+        .settings-tabs { display: flex; gap: 5px; margin-bottom: 15px; background: var(--row-even); padding: 5px; border-radius: 8px; flex-shrink: 0; }
         .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; cursor: pointer; font-weight: bold; color: var(--text-color); border-radius: 6px; transition: 0.2s; }
         .tab-btn.active { background: var(--primary); color: white; }
 
-        .rate-header-row { display: grid; gap: 8px; text-align: center; font-weight: bold; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid var(--border); font-size: 0.9em; }
+        .rate-header-row { display: grid; gap: 8px; text-align: center; font-weight: bold; margin-bottom: 5px; padding-bottom: 5px; border-bottom: 2px solid var(--border); font-size: 0.9em; flex-shrink: 0; }
         .rate-data-row { display: grid; gap: 8px; align-items: center; margin-bottom: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
         .rate-input { width: 100%; padding: 6px 2px; text-align: center; border: 1px solid var(--border); border-radius: 4px; background: var(--input-bg); color: var(--text-color); font-size: 0.9rem; }
         .range-cell { display: flex; flex-direction: column; gap: 4px; }
@@ -228,48 +327,55 @@
         .worker-row select { width: 100%; padding: 10px; }
         .worker-label { font-size: 0.8em; opacity: 0.6; margin-bottom: 2px; }
 
+        /* Bank List Styling */
+        .bank-list-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding:8px; background:var(--row-even); border-radius:6px; border:1px solid var(--border); }
+        .bank-list-item label { margin:0; font-size:0.95em; }
+        .bank-list-item input { width:120px; padding:8px; text-align:right; font-weight:bold; }
+
+        /* Advance History Styling */
+        .history-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9em; }
+        .history-row:last-child { border-bottom: none; }
+        .hist-info { display: flex; gap: 10px; }
+        .hist-date { opacity: 0.6; min-width: 80px; }
+        .hist-amt { font-weight: bold; }
+
         /* ========================================= */
-        /* ========= MOBILE RESPONSIVE  ============ */
+        /* === MOBILE RESPONSIVE TWEAKS (V8.0) === */
         /* ========================================= */
         @media (max-width: 600px) {
             body { padding: 0; }
             .container { padding: 15px; border-radius: 0; border: none; box-shadow: none; }
-            
-            /* Compact Header */
             .card-header-actions { gap: 5px; margin-bottom: 10px; }
             .type-btn { padding: 8px 10px; font-size: 0.8rem; }
             .icon-btn { min-width: 38px; height: 38px; padding: 5px; }
             h1 { font-size: 1.3rem; margin-bottom: 15px; }
-
-            /* Optimized Input Layout for Mobile */
-            .input-grid { 
-                grid-template-columns: 1fr 1fr 1fr; /* 3 Columns base */
-                gap: 10px; padding: 10px; 
-            }
+            .input-grid { grid-template-columns: 1fr 1fr 1fr; gap: 10px; padding: 10px; }
             .form-group label { font-size: 0.8rem; }
             input, select { padding: 10px; font-size: 15px; }
-
-            /* Date & Worker Name take full width on mobile */
-            .form-group:nth-child(1), /* Date */
-            .form-group:nth-child(2)  /* Worker */
-            { grid-column: span 3; }
-
-            /* Report Grid Stacking */
+            .form-group:nth-child(1), .form-group:nth-child(2) { grid-column: span 3; }
             .report-grid { grid-template-columns: 1fr; gap: 10px; }
-
-            /* Compact Table */
             .table-container { max-height: 50vh; }
             th, td { padding: 10px 5px; font-size: 0.85rem; }
-            
-            /* Action Buttons */
-            .action-btn-shared { padding: 12px; font-size: 0.9rem; }
+            .action-btn-shared { padding: 12px; font-size: 0.9rem; width: 100%; flex: none; }
             .report-panel { gap: 8px; flex-direction: column-reverse; }
-            .action-btn-shared { width: 100%; flex: none; }
             .print-btn { order: 4; } .csv-btn { order: 3; } .restore-btn { order: 2; } .clear-btn { order: 1; }
+            
+            .action-group { display: grid; grid-template-columns: 1fr 1fr; }
+            .add-btn { grid-column: 1 / -1; } 
+            .advance-btn, .bank-btn { grid-column: auto; }
+            .report-view-btn { grid-column: 1 / -1; } 
         }
     </style>
 </head>
 <body>
+
+<div id="splash-screen">
+    <i class="far fa-gem splash-logo"></i>
+    <div class="splash-title">CVD MANAGER</div>
+    <div class="splash-subtitle">Pro Edition</div>
+    <div class="loader"></div>
+    <div class="splash-footer" style="position:absolute; bottom:30px; opacity:0.6; font-size:0.8rem;">Developed by Akshat Dhanani</div>
+</div>
 
 <div class="container">
     
@@ -310,7 +416,9 @@
             <div id="rate-display" style="grid-column: 1/-1; font-style:italic; font-size:0.9em; margin-top:-5px;">Enter size...</div>
             
             <div class="action-group">
-                <button class="add-btn" onclick="addEntry()">Add to List</button>
+                <button class="add-btn" id="addBtn" onclick="addEntry()">Add to List</button>
+                <button class="advance-btn" onclick="openAdvanceModal()">💸 Advance (Cash)</button>
+                <button class="bank-btn" onclick="openBankModal()">🏦 Bank Transfer</button>
                 <button class="report-view-btn" onclick="openWorkerReportView()">📊 Worker Report</button>
             </div>
         </div>
@@ -385,10 +493,12 @@
 <div id="typeModal" class="modal">
     <div class="modal-content">
         <div class="modal-header"><h3>💎 Select Diamond Type</h3><span class="close-modal" onclick="closeTypeModal()">&times;</span></div>
-        <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
-            <div class="type-option active" id="opt3EX" onclick="selectType('3EX')">✨ CVD 3EX (Standard)</div>
-            <div class="type-option" id="optComm" onclick="selectType('Commercial')">🏭 CVD Commercial</div>
-            <div class="type-option" id="optFancy" onclick="selectType('Fancy')">🌸 Fancy Diamond</div>
+        <div class="modal-scrollable-body">
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+                <div class="type-option active" id="opt3EX" onclick="selectType('3EX')">✨ CVD 3EX (Standard)</div>
+                <div class="type-option" id="optComm" onclick="selectType('Commercial')">🏭 CVD Commercial</div>
+                <div class="type-option" id="optFancy" onclick="selectType('Fancy')">🌸 Fancy Diamond</div>
+            </div>
         </div>
     </div>
 </div>
@@ -396,22 +506,72 @@
 <div id="workerModal" class="modal">
     <div class="modal-content">
         <div class="modal-header"><h3>👤 Manage Workers</h3><span class="close-modal" onclick="closeWorkerModal()">&times;</span></div>
-        <div style="margin-bottom:10px; font-size:0.9em; opacity:0.7;">Change names and assign Default Types.<br>The app will auto-select this type when you choose the name.</div>
-        <div id="workerListContainer"></div>
-        <div class="modal-actions"><button class="save-btn" onclick="closeWorkerModal()">Done</button></div>
+        <div class="modal-scrollable-body">
+            <div style="margin-bottom:10px; font-size:0.9em; opacity:0.7; text-align:center;">Change names and assign Default Types.</div>
+            <div id="workerListContainer"></div>
+        </div>
+        <div class="modal-actions">
+            <button class="add-btn" style="background:#28a745; color:white; margin-bottom:10px;" onclick="addNewWorker()">+ Add New Worker</button>
+            <button class="save-btn" onclick="closeWorkerModal()">Done</button>
+        </div>
+    </div>
+</div>
+
+<div id="advanceModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="border-bottom-color: #ffc107;"><h3>💸 Advance (Cash)</h3><span class="close-modal" onclick="closeAdvanceModal()">&times;</span></div>
+        <div class="modal-scrollable-body">
+            <div class="form-group" style="margin-bottom:15px">
+                <label>Date</label>
+                <input type="date" id="advDate">
+            </div>
+            <div class="form-group" style="margin-bottom:15px">
+                <label>Worker Name</label>
+                <input type="text" id="advWorker" list="nameSuggestions" placeholder="Select Worker">
+            </div>
+            <div class="form-group" style="margin-bottom:15px">
+                <label>Amount (₹)</label>
+                <input type="number" id="advAmount" placeholder="Enter Amount">
+            </div>
+            <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+            <div style="font-size:0.9em; font-weight:bold; margin-bottom:10px; opacity:0.7;">Recent Cash Advances</div>
+            <div id="advanceHistoryList" style="padding-bottom:10px;">
+                </div>
+        </div>
+        <div class="modal-actions">
+            <button class="save-btn" style="background-color: #ffc107; color:#333;" onclick="saveAdvance()">Save Cash Payment</button>
+            <button class="cancel-btn" onclick="closeAdvanceModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="bankModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="border-bottom-color: #6f42c1;"><h3>🏦 Bank Salaries</h3><span class="close-modal" onclick="closeBankModal()">&times;</span></div>
+        <div class="modal-scrollable-body">
+            <div style="margin-bottom:15px; font-size:0.9em; opacity:0.7; text-align:center;">Enter fixed salaries. App remembers values.<br><b>Payment Date: Today</b></div>
+            <div id="bankListContainer">
+                </div>
+        </div>
+        <div class="modal-actions">
+            <button class="save-btn" style="background-color: #6f42c1; color:white;" onclick="saveBankTransfer()">Save Payments</button>
+            <button class="cancel-btn" onclick="closeBankModal()">Cancel</button>
+        </div>
     </div>
 </div>
 
 <div id="settingsModal" class="modal">
     <div class="modal-content">
         <div class="modal-header"><h3>⚙️ Rate Card</h3><span class="close-modal" onclick="closeSettings()">&times;</span></div>
-        <div class="settings-tabs">
-            <button class="tab-btn active" id="tab3EX" onclick="switchSettingsTab('3EX')">3EX</button>
-            <button class="tab-btn" id="tabCommercial" onclick="switchSettingsTab('Commercial')">Comm</button>
-            <button class="tab-btn" id="tabFancy" onclick="switchSettingsTab('Fancy')">Fancy</button>
+        <div style="padding: 10px 20px 0px 20px;">
+            <div class="settings-tabs">
+                <button class="tab-btn active" id="tab3EX" onclick="switchSettingsTab('3EX')">3EX</button>
+                <button class="tab-btn" id="tabCommercial" onclick="switchSettingsTab('Commercial')">Comm</button>
+                <button class="tab-btn" id="tabFancy" onclick="switchSettingsTab('Fancy')">Fancy</button>
+            </div>
+            <div id="rateHeaderRow" class="rate-header-row"></div>
         </div>
-        <div id="rateHeaderRow" class="rate-header-row"></div>
-        <div id="ratesList"></div>
+        <div class="modal-scrollable-body" id="ratesList" style="padding-top:5px;"></div>
         <div class="modal-actions"><button class="reset-btn" onclick="resetRates()">Reset Defaults</button><button class="save-btn" onclick="saveRates()">Save Changes</button></div>
     </div>
 </div>
@@ -419,8 +579,10 @@
 <div id="dateModal" class="modal">
     <div class="modal-content">
         <div class="modal-header"><h3>📅 Report Date</h3><span class="close-modal" onclick="closeDateModal()">&times;</span></div>
-        <div class="form-group" style="margin-bottom:15px"><label>From:</label><input type="date" id="startDate"></div>
-        <div class="form-group"><label>To:</label><input type="date" id="endDate"></div>
+        <div class="modal-scrollable-body">
+            <div class="form-group" style="margin-bottom:15px"><label>From:</label><input type="date" id="startDate"></div>
+            <div class="form-group"><label>To:</label><input type="date" id="endDate"></div>
+        </div>
         <div class="modal-actions"><button class="save-btn" onclick="generateReport()">Download PDF</button><button class="cancel-btn" onclick="closeDateModal()">Cancel</button></div>
     </div>
 </div>
@@ -428,22 +590,37 @@
 <div id="clearModal" class="modal">
     <div class="modal-content">
         <div class="modal-header" style="border-bottom-color: #dc3545;"><h3 style="color: #dc3545;">🗑️ Clear Data</h3><button class="close-modal" onclick="closeClearModal()">&times;</span></div>
-        <div style="margin-bottom: 15px; opacity:0.8; font-size:0.9em;">Select range or leave empty for ALL.</div>
-        <div class="form-group" style="margin-bottom: 15px;"><label>From:</label><input type="date" id="clearStart"></div>
-        <div class="form-group"><label>To:</label><input type="date" id="clearEnd"></div>
+        <div class="modal-scrollable-body">
+            <div style="margin-bottom: 15px; opacity:0.8; font-size:0.9em;">Select range or leave empty for ALL.</div>
+            <div class="form-group" style="margin-bottom: 15px;"><label>From:</label><input type="date" id="clearStart"></div>
+            <div class="form-group"><label>To:</label><input type="date" id="clearEnd"></div>
+        </div>
         <div class="modal-actions"><button class="danger-btn" onclick="performClear()">Delete</button><button class="cancel-btn" onclick="closeClearModal()">Cancel</button></div>
     </div>
 </div>
+
+
 
 <script>
     // --- RATES DATABASE ---
     const rates3EX_Default = [{ min: 0.30, max: 0.49, rates: { T: 527, P: 330, M: 368, F: 1225 } },{ min: 0.50, max: 0.69, rates: { T: 484, P: 303, M: 338, F: 1125 } },{ min: 0.70, max: 0.89, rates: { T: 441, P: 276, M: 308, F: 1025 } },{ min: 0.90, max: 0.99, rates: { T: 387, P: 243, M: 270, F: 900 } },{ min: 1.00, max: 1.49, rates: { T: 344, P: 216, M: 240, F: 800 } },{ min: 1.50, max: 1.99, rates: { T: 312, P: 195, M: 218, F: 725 } },{ min: 2.00, max: 2.99, rates: { T: 291, P: 182, M: 202, F: 675 } },{ min: 3.00, max: 3.99, rates: { T: 280, P: 175, M: 195, F: 650 } },{ min: 4.00, max: 4.99, rates: { T: 270, P: 168, M: 187, F: 625 } },{ min: 5.00, max: 9999, rates: { T: 248, P: 155, M: 172, F: 575 } }];
     const ratesComm_Default = [{ min: 0.30, max: 0.49, rates: { T: 195, P: 82, M: 107, F: 384 } },{ min: 0.50, max: 0.99, rates: { T: 174, P: 73, M: 96, F: 343 } },{ min: 1.00, max: 1.49, rates: { T: 152, P: 65, M: 84, F: 301 } },{ min: 1.50, max: 1.99, rates: { T: 147, P: 63, M: 81, F: 291 } },{ min: 2.00, max: 2.99, rates: { T: 137, P: 58, M: 75, F: 270 } },{ min: 3.00, max: 3.99, rates: { T: 132, P: 55, M: 72, F: 259 } },{ min: 4.00, max: 4.99, rates: { T: 126, P: 53, M: 70, F: 249 } },{ min: 5.00, max: 9999, rates: { T: 111, P: 46, M: 61, F: 218 } }];
-    const ratesFancy_Default = [{ min: 1.00, max: 1.99, rates: { Full: 1300, Border: 0 } },{ min: 2.00, max: 2.99, rates: { Full: 1100, Border: 900 } },{ min: 3.00, max: 4.99, rates: { Full: 950, Border: 800 } },{ min: 5.00, max: 9999, rates: { Full: 800, Border: 700 } }];
+    const ratesFancy_Default = [{ min: 0.30, max: 0.99, rates: { Full: 1500, Border: 1300 } },{ min: 1.00, max: 1.99, rates: { Full: 1300, Border: 1150 } },{ min: 2.00, max: 2.99, rates: { Full: 1100, Border: 900 } },{ min: 3.00, max: 4.99, rates: { Full: 950, Border: 800 } },{ min: 5.00, max: 9999, rates: { Full: 800, Border: 700 } }];
 
     let currentRates = [], entries = [], workerList = [], currentCategory = "3EX", editingCategory = "3EX", editingRates = [];
+    let advances = []; 
+    let bankTransfers = []; 
 
     window.onload = function() {
+        // SPLASH SCREEN LOGIC
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => {
+                splash.style.visibility = 'hidden';
+            }, 600);
+        }, 2500); // 2.5 Seconds delay
+
         if (localStorage.getItem('darkMode') === 'enabled') document.body.classList.add('dark-mode');
         
         const today = new Date();
@@ -458,6 +635,19 @@
 
         const savedData = localStorage.getItem('diamondData');
         if (savedData) entries = JSON.parse(savedData);
+
+        const savedAdvances = localStorage.getItem('advanceData');
+        if (savedAdvances) advances = JSON.parse(savedAdvances);
+
+        const savedBank = localStorage.getItem('bankData');
+        if (savedBank) bankTransfers = JSON.parse(savedBank);
+
+        document.getElementById("diamondSize").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Stops other actions
+            addEntry(); // Adds the diamond immediately
+        }
+        });
         
         initWorkers();
         selectType('3EX'); 
@@ -508,7 +698,128 @@
         document.getElementById('reportTotal').innerText = total.toFixed(2);
     }
 
-    // --- NEW: DOWNLOAD SPECIFIC PDF ---
+    // --- ADVANCE PAYMENT LOGIC WITH HISTORY ---
+    function openAdvanceModal() {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const d = String(today.getDate()).padStart(2, '0');
+        document.getElementById('advDate').value = `${y}-${m}-${d}`;
+        document.getElementById('advWorker').value = '';
+        document.getElementById('advAmount').value = '';
+        document.getElementById('advanceModal').style.display = 'flex';
+        renderAdvanceHistory(); // Load history when opening
+    }
+    
+    function closeAdvanceModal() { document.getElementById('advanceModal').style.display = 'none'; }
+    
+    function saveAdvance() {
+        const dt = document.getElementById('advDate').value;
+        const nm = document.getElementById('advWorker').value.trim();
+        const amt = parseFloat(document.getElementById('advAmount').value);
+        if(!dt || !nm || !amt) { alert("Please fill all details"); return; }
+        const [y, m, d] = dt.split('-'); const fDate = `${d}/${m}/${y}`;
+        advances.push({ id: Date.now(), date: fDate, name: nm, amount: amt });
+        localStorage.setItem('advanceData', JSON.stringify(advances));
+        alert("Cash Payment Saved!"); 
+        
+        // Clear inputs and refresh list instead of closing
+        document.getElementById('advAmount').value = '';
+        renderAdvanceHistory();
+    }
+
+    function renderAdvanceHistory() {
+        const container = document.getElementById('advanceHistoryList');
+        container.innerHTML = '';
+        
+        // Sort by newest first
+        const sortedAdvances = [...advances].sort((a,b) => b.id - a.id);
+        
+        if(sortedAdvances.length === 0) {
+            container.innerHTML = '<div style="text-align:center; opacity:0.5;">No history yet.</div>';
+            return;
+        }
+
+        sortedAdvances.forEach(adv => {
+            const html = `
+            <div class="history-row">
+                <div class="hist-info">
+                    <div class="hist-date">${adv.date}</div>
+                    <div class="hist-name">${adv.name}</div>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div class="hist-amt">₹${adv.amount}</div>
+                    <button onclick="deleteAdvance(${adv.id})" style="background:#dc3545; color:white; border:none; border-radius:4px; padding:2px 6px; cursor:pointer; font-size:0.8em;">X</button>
+                </div>
+            </div>`;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+    }
+
+    function deleteAdvance(id) {
+        if(confirm("Delete this entry?")) {
+            advances = advances.filter(a => a.id !== id);
+            localStorage.setItem('advanceData', JSON.stringify(advances));
+            renderAdvanceHistory();
+        }
+    }
+
+    // --- BANK TRANSFER LOGIC (NO DATE INPUT) ---
+    function openBankModal() {
+        const container = document.getElementById('bankListContainer');
+        container.innerHTML = '';
+        
+        // Render List of Workers with Stored Values
+        workerList.forEach((w, index) => {
+            const defaultAmt = w.defaultBankSalary || 0;
+            const html = `
+            <div class="bank-list-item">
+                <label>${w.name}</label>
+                <input type="number" id="bank_input_${index}" data-name="${w.name}" value="${defaultAmt}" placeholder="0">
+            </div>`;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+
+        document.getElementById('bankModal').style.display = 'flex';
+    }
+    function closeBankModal() { document.getElementById('bankModal').style.display = 'none'; }
+    
+    function saveBankTransfer() {
+        // Automatically use TODAY'S DATE
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        const d = String(today.getDate()).padStart(2, '0');
+        const fDate = `${d}/${m}/${y}`;
+        
+        let count = 0;
+        
+        // Iterate through all inputs
+        workerList.forEach((w, index) => {
+            const inp = document.getElementById(`bank_input_${index}`);
+            const val = parseFloat(inp.value) || 0;
+            
+            // 1. UPDATE DEFAULT SETTING (Memory)
+            w.defaultBankSalary = val;
+
+            // 2. CREATE TRANSACTION IF > 0
+            if (val > 0) {
+                bankTransfers.push({ id: Date.now() + index, date: fDate, name: w.name, amount: val });
+                count++;
+            }
+        });
+
+        // Save everything
+        saveWorkers(); 
+        localStorage.setItem('bankData', JSON.stringify(bankTransfers)); 
+        
+        if(count > 0) alert(`Saved ${count} bank payments for Today (${fDate})!`);
+        else alert("Defaults updated. No payments made (Amounts were 0).");
+        
+        closeBankModal();
+    }
+
+    // --- PDF REPORT ---
     function downloadWorkerPDF() {
         const name = document.getElementById('reportWorkerName').value.trim();
         const s = document.getElementById('reportStartDate').value;
@@ -520,12 +831,21 @@
         const d2 = new Date(e); d2.setHours(23,59,59,999);
 
         const filtered = entries.filter(item => {
-            const p = item.date.split('/'); 
-            const itemDate = new Date(p[2], p[1]-1, p[0]);
+            const p = item.date.split('/'); const itemDate = new Date(p[2], p[1]-1, p[0]);
+            return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
+        });
+        
+        const workerAdvances = advances.filter(item => {
+            const p = item.date.split('/'); const itemDate = new Date(p[2], p[1]-1, p[0]);
+            return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
+        });
+        
+        const workerBank = bankTransfers.filter(item => {
+            const p = item.date.split('/'); const itemDate = new Date(p[2], p[1]-1, p[0]);
             return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
         });
 
-        if(filtered.length === 0) { alert("No entries found for this range."); return; }
+        if(filtered.length === 0 && workerAdvances.length === 0 && workerBank.length === 0) { alert("No entries found."); return; }
 
         filtered.sort((a,b) => {
             const da = a.date.split('/'), db = b.date.split('/');
@@ -533,6 +853,9 @@
         });
 
         let totalAmt = 0, totalQty = 0, totalSize = 0;
+        let totalAdvance = 0, totalBank = 0;
+        workerAdvances.forEach(a => totalAdvance += a.amount);
+        workerBank.forEach(b => totalBank += b.amount);
 
         let h = `<html><head><title>Worker Report - ${name}</title><style>body{font-family:sans-serif;padding:20px}h1{text-align:center;border-bottom:2px solid #333}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:0.9em}th{background:#eee}.comm{background-color:#fff9c4 !important;-webkit-print-color-adjust:exact}.fancy{background-color:#f8d7da !important;-webkit-print-color-adjust:exact}</style></head><body>`;
         
@@ -545,10 +868,24 @@
             let bg = (r.category === 'Commercial') ? 'class="comm"' : (r.category === 'Fancy') ? 'class="fancy"' : '';
             h += `<tr ${bg}><td>${r.date}</td><td>${r.type}</td><td>${r.size.toFixed(2)}</td><td>${r.rate}</td><td>${r.qty}</td><td>${r.total.toFixed(2)}</td></tr>`;
         });
-
-        h += `</tbody><tfoot><tr><td colspan="2" align="right"><b>Totals:</b></td><td><b>${totalSize.toFixed(2)} Cts</b></td><td>-</td><td><b>${totalQty} Pcs</b></td><td><b>₹${totalAmt.toFixed(2)}</b></td></tr></tfoot></table>`;
         
-        h += `<h2 align="right">Grand Total: ₹${totalAmt.toFixed(2)}</h2><script>window.print()<\/script></body></html>`;
+        const netPayable = totalAmt - totalAdvance - totalBank;
+
+        h += `</tbody><tfoot>
+            <tr><td colspan="4" align="right"><b>Total Work:</b></td><td><b>${totalQty} Pcs</b></td><td><b>₹${totalAmt.toFixed(2)}</b></td></tr>
+            <tr><td colspan="5" align="right" style="color:#d9534f"><b>Less: Cash Advance:</b></td><td style="color:#d9534f"><b>- ₹${totalAdvance.toFixed(2)}</b></td></tr>
+            <tr><td colspan="5" align="right" style="color:#6f42c1"><b>Less: Bank Transfer:</b></td><td style="color:#6f42c1"><b>- ₹${totalBank.toFixed(2)}</b></td></tr>
+            <tr><td colspan="5" align="right" style="font-size:1.2em"><b>Net Payable:</b></td><td style="font-size:1.2em; border-top:2px solid #000; color:${net>=0?'green':'red'}"><b>₹${netPayable.toFixed(2)}</b></td></tr>
+            </tfoot></table>`;
+        
+        if(workerAdvances.length > 0 || workerBank.length > 0) {
+            h += `<h4>Payment History:</h4><ul>`;
+            workerAdvances.forEach(a => h += `<li>(Cash) ${a.date}: ₹${a.amount}</li>`);
+            workerBank.forEach(b => h += `<li>(Bank) ${b.date}: ₹${b.amount}</li>`);
+            h += `</ul>`;
+        }
+
+        h += `<script>window.print()<\/script></body></html>`;
 
         const w = window.open('', '_blank'); w.document.write(h); w.document.close();
     }
@@ -571,6 +908,21 @@
             c.insertAdjacentHTML('beforeend', `<div class="worker-row"><div><div class="worker-label">Name</div><input type="text" value="${w.name}" onchange="updateWorkerName(${i}, this.value)"></div><div><div class="worker-label">Default Type</div><select onchange="updateWorkerType(${i}, this.value)">${oH}</select></div></div>`);
         });
     }
+    
+    // --- ADD WORKER FUNCTION ---
+    function addNewWorker() {
+        const n = prompt("Enter New Worker Name:");
+        if(n && n.trim()) {
+            workerList.push({ name: n.trim(), defaultType: 'T' });
+            saveWorkers(); 
+            renderWorkerManagerList(); 
+            
+            // Auto-scroll to bottom to see new worker
+            const c = document.getElementById('workerListContainer');
+            setTimeout(() => c.scrollTop = c.scrollHeight, 100);
+        }
+    }
+    
     function updateWorkerName(i, n) { if(n.trim()){ workerList[i].name=n; saveWorkers(); } }
     function updateWorkerType(i, t) { workerList[i].defaultType=t; saveWorkers(); }
     function checkWorkerType() {
@@ -671,10 +1023,15 @@
     function openClearModal(){document.getElementById('clearModal').style.display='flex';} function closeClearModal(){document.getElementById('clearModal').style.display='none';}
     function performClear() {
         const s = document.getElementById('clearStart').value, e = document.getElementById('clearEnd').value;
-        if (!s && !e) { if(confirm("Delete ALL?")) { entries=[]; saveData(); renderTable(); updateSuggestions(); closeClearModal(); } return; }
+        if (!s && !e) { if(confirm("Delete ALL?")) { entries=[]; advances=[]; bankTransfers=[]; localStorage.setItem('advanceData','[]'); localStorage.setItem('bankData','[]'); saveData(); renderTable(); updateSuggestions(); closeClearModal(); } return; }
         if (s && e) {
             const d1 = new Date(s); d1.setHours(0,0,0,0); const d2 = new Date(e); d2.setHours(23,59,59,999);
             entries = entries.filter(i => { const p = i.date.split('/'); const d = new Date(p[2], p[1]-1, p[0]); return !(d >= d1 && d <= d2); });
+            // Also clear advances & bank in range
+            advances = advances.filter(i => { const p = i.date.split('/'); const d = new Date(p[2], p[1]-1, p[0]); return !(d >= d1 && d <= d2); });
+            bankTransfers = bankTransfers.filter(i => { const p = i.date.split('/'); const d = new Date(p[2], p[1]-1, p[0]); return !(d >= d1 && d <= d2); });
+            localStorage.setItem('advanceData', JSON.stringify(advances));
+            localStorage.setItem('bankData', JSON.stringify(bankTransfers));
             saveData(); renderTable(); updateSuggestions(); closeClearModal();
         } else alert("Select both dates.");
     }
@@ -695,30 +1052,78 @@
     }
     function generateReport() {
         if (!entries.length) { alert("No data!"); return; }
-        const s = document.getElementById('startDate').value, e = document.getElementById('endDate').value;
-        let d = entries, tr = "(All Time)";
+        const s = document.getElementById('startDate').value;
+        const e = document.getElementById('endDate').value;
+        
+        let d = entries;
+        let advs = advances; 
+        let banks = bankTransfers;
+        let tr = "(All Time)";
+        
         if (s && e) {
             const d1 = new Date(s); d1.setHours(0,0,0,0); const d2 = new Date(e); d2.setHours(23,59,59,999);
             d = entries.filter(i => { const x = parseDateStr(i.date); return x >= d1 && x <= d2; });
-            if(!d.length) { alert("No entries"); return; }
+            advs = advances.filter(i => { const x = parseDateStr(i.date); return x >= d1 && x <= d2; });
+            banks = bankTransfers.filter(i => { const x = parseDateStr(i.date); return x >= d1 && x <= d2; });
+            
+            if(!d.length && !advs.length && !banks.length) { alert("No data for this date range"); return; }
             tr = `(${s.split('-').reverse().join('/')} to ${e.split('-').reverse().join('/')})`;
         } else if(s||e) { alert("Select both"); return; }
+        
         closeDateModal();
-        const names = [...new Set(d.map(i => i.name))];
-        let h = `<html><head><title>Report</title><style>body{font-family:sans-serif;padding:20px}h1{text-align:center;border-bottom:2px solid #333}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:0.9em}th{background:#eee}.comm{background-color:#fff9c4 !important;-webkit-print-color-adjust:exact}.fancy{background-color:#f8d7da !important;-webkit-print-color-adjust:exact}</style></head><body><h1>💎 Salary Report</h1><center>${tr}</center>`;
-        let gt = 0;
+        
+        const names = [...new Set([...d.map(i => i.name), ...advs.map(i => i.name), ...banks.map(i => i.name)])];
+        
+        let h = `<html><head><title>Report</title><style>
+            body{font-family:sans-serif;padding:20px}
+            h1{text-align:center;border-bottom:2px solid #333}
+            table{width:100%;border-collapse:collapse;margin-top:10px;margin-bottom:30px}
+            th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:0.9em}
+            th{background:#eee}
+            .comm{background-color:#fff9c4 !important;-webkit-print-color-adjust:exact}
+            .fancy{background-color:#f8d7da !important;-webkit-print-color-adjust:exact}
+        </style></head><body><h1>💎 Salary Report</h1><center>${tr}</center>`;
+        
+        let gt = 0; 
+        
         names.forEach(n => {
-            const wData = d.filter(i => i.name === n); let wt = 0; let wQty = 0; let wSize = 0;
+            const wData = d.filter(i => i.name === n);
+            const wAdv = advs.filter(i => i.name === n);
+            const wBank = banks.filter(i => i.name === n);
+            
+            if (wData.length === 0 && wAdv.length === 0 && wBank.length === 0) return;
+
+            let wt = 0; let wQty = 0; let wSize = 0;
+            let wAdvTotal = 0;
+            let wBankTotal = 0;
+            
+            wData.forEach(r => { wt += r.total; wQty += r.qty; wSize += r.size; });
+            wAdv.forEach(a => { wAdvTotal += a.amount; });
+            wBank.forEach(b => { wBankTotal += b.amount; });
+            
+            const net = wt - wAdvTotal - wBankTotal;
+            gt += net;
+
             h += `<h3>👤 ${n}</h3><table><thead><tr><th>Date</th><th>Type</th><th>Size</th><th>Rate</th><th>Qty</th><th>Total</th></tr></thead><tbody>`;
-            wData.forEach(r => {
-                wt += r.total; wQty += r.qty; wSize += r.size;
-                let bg = (r.category === 'Commercial') ? 'class="comm"' : (r.category === 'Fancy') ? 'class="fancy"' : '';
-                h += `<tr ${bg}><td>${r.date}</td><td>${r.type}</td><td>${r.size.toFixed(2)}</td><td>${r.rate}</td><td>${r.qty}</td><td>${r.total.toFixed(2)}</td></tr>`;
-            });
-            h += `</tbody><tfoot><tr><td colspan="2" align="right"><b>Totals:</b></td><td><b>${wSize.toFixed(2)} Cts</b></td><td>-</td><td><b>${wQty} Pcs</b></td><td><b>₹${wt.toFixed(2)}</b></td></tr></tfoot></table>`;
-            gt += wt;
+            
+            if (wData.length > 0) {
+                wData.forEach(r => {
+                    let bg = (r.category === 'Commercial') ? 'class="comm"' : (r.category === 'Fancy') ? 'class="fancy"' : '';
+                    h += `<tr ${bg}><td>${r.date}</td><td>${r.type}</td><td>${r.size.toFixed(2)}</td><td>${r.rate}</td><td>${r.qty}</td><td>${r.total.toFixed(2)}</td></tr>`;
+                });
+            } else {
+                h += `<tr><td colspan="6" style="text-align:center;font-style:italic">No work entries.</td></tr>`;
+            }
+            
+            h += `</tbody><tfoot>
+                <tr><td colspan="2" align="right"><b>Total Work:</b></td><td><b>${wSize.toFixed(2)}</b></td><td>-</td><td><b>${wQty}</b></td><td><b>₹${wt.toFixed(2)}</b></td></tr>
+                <tr><td colspan="5" align="right" style="color:#d9534f"><b>Less: Cash Advance:</b></td><td style="color:#d9534f"><b>- ₹${wAdvTotal.toFixed(2)}</b></td></tr>
+                <tr><td colspan="5" align="right" style="color:#6f42c1"><b>Less: Bank Transfer:</b></td><td style="color:#6f42c1"><b>- ₹${wBankTotal.toFixed(2)}</b></td></tr>
+                <tr><td colspan="5" align="right" style="font-size:1.1em"><b>Net Payable:</b></td><td style="font-size:1.1em; border-top:2px solid #000; color:${net>=0?'green':'red'}"><b>₹${net.toFixed(2)}</b></td></tr>
+            </tfoot></table>`;
         });
-        h += `<h2 align="right">Grand Total: ₹${gt.toFixed(2)}</h2><script>window.print()<\/script></body></html>`;
+        
+        h += `<h2 align="right">Total Net Payable: ₹${gt.toFixed(2)}</h2><script>window.print()<\/script></body></html>`;
         const w = window.open('', '_blank'); w.document.write(h); w.document.close();
     }
     function parseDateStr(s) { const p=s.split('/'); return new Date(p[2],p[1]-1,p[0]); }
