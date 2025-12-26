@@ -8,12 +8,12 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "diamond-logo-v1.png",  <-- CHANGE THIS
+      "src": "diamond-logo-v2.png",  <-- CHANGE THIS
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "diamond-logo-v1.png",  <-- CHANGE THIS
+      "src": "diamond-logo-v2.png",  <-- CHANGE THIS
       "sizes": "512x512",
       "type": "image/png"
     }
