@@ -204,7 +204,7 @@
         .action-group {
             grid-column: 1 / -1;
             display: flex;
-            gap: 8px; /* Reduced gap */
+            gap: 8px;
             margin-top: 10px;
             flex-wrap: wrap; 
         }
@@ -217,6 +217,13 @@
         
         .report-view-btn {
             background-color: var(--secondary); color: white; border: none;
+            padding: 12px; border-radius: 6px; font-size: 0.95rem; cursor: pointer;
+            font-weight: bold; flex: 1; min-width: 100px;
+        }
+        
+        /* NEW SUMMARY BUTTON */
+        .summary-btn {
+            background-color: #20c997; color: white; border: none;
             padding: 12px; border-radius: 6px; font-size: 0.95rem; cursor: pointer;
             font-weight: bold; flex: 1; min-width: 100px;
         }
@@ -242,8 +249,11 @@
         }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); color: var(--text-color); }
-        th { background-color: var(--table-header); color: white; position: sticky; top: 0; z-index: 10; }
+        th { background-color: var(--table-header); color: white; position: sticky; top: 0; z-index: 10; font-weight: 600; letter-spacing: 0.5px;}
+        
         tr:nth-child(even) { background-color: var(--row-even); }
+        tr:hover { background-color: rgba(0,0,0,0.05); }
+        
         tr.commercial-row { background-color: var(--comm-highlight) !important; color: var(--highlight-text); }
         tr.fancy-row { background-color: var(--fancy-highlight) !important; color: var(--highlight-text); }
 
@@ -277,7 +287,6 @@
         /* --- MODALS FIXED LAYOUT --- */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 2000; padding: 20px; box-sizing: border-box; }
         
-        /* Flex Layout for Modals */
         .modal-content { 
             background-color: var(--modal-bg); 
             border-radius: 12px; 
@@ -289,11 +298,12 @@
             overflow: hidden; 
         }
         
-        /* Fixed Header & Footer areas */
+        /* WIDER MODAL FOR SUMMARY */
+        .modal-content.wide-modal { max-width: 800px; }
+
         .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 10px 20px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
         .modal-actions { padding: 15px 20px 20px 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border); flex-shrink: 0; background: var(--modal-bg); }
         
-        /* Scrollable Content Area */
         .modal-scrollable-body {
             padding: 10px 20px;
             overflow-y: auto;
@@ -331,13 +341,34 @@
         .bank-list-item { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding:8px; background:var(--row-even); border-radius:6px; border:1px solid var(--border); }
         .bank-list-item label { margin:0; font-size:0.95em; }
         .bank-list-item input { width:120px; padding:8px; text-align:right; font-weight:bold; }
-
-        /* Advance History Styling */
-        .history-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9em; }
-        .history-row:last-child { border-bottom: none; }
-        .hist-info { display: flex; gap: 10px; }
-        .hist-date { opacity: 0.6; min-width: 80px; }
-        .hist-amt { font-weight: bold; }
+        
+        /* Summary Table Styling */
+        .summary-positive { color: green; font-weight: bold; }
+        .summary-negative { color: red; font-weight: bold; }
+        body.dark-mode .summary-positive { color: #4cd137; }
+        body.dark-mode .summary-negative { color: #e84118; }
+        
+        /* BIGGER PRINT BUTTON */
+        .print-btn-large {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        .print-btn-large:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
 
         /* ========================================= */
         /* === MOBILE RESPONSIVE TWEAKS (V8.0) === */
@@ -364,6 +395,7 @@
             .add-btn { grid-column: 1 / -1; } 
             .advance-btn, .bank-btn { grid-column: auto; }
             .report-view-btn { grid-column: 1 / -1; } 
+            .summary-btn { grid-column: 1 / -1; }
         }
     </style>
 </head>
@@ -374,7 +406,7 @@
     <div class="splash-title">CVD MANAGER</div>
     <div class="splash-subtitle">Pro Edition</div>
     <div class="loader"></div>
-    <div class="splash-footer" style="position:absolute; bottom:30px; opacity:0.6; font-size:0.8rem;">Developed by Akshat Dhanani</div>
+    <div class="splash-footer">Developed by Akshat Dhanani</div>
 </div>
 
 <div class="container">
@@ -420,6 +452,7 @@
                 <button class="advance-btn" onclick="openAdvanceModal()">💸 Advance (Cash)</button>
                 <button class="bank-btn" onclick="openBankModal()">🏦 Bank Transfer</button>
                 <button class="report-view-btn" onclick="openWorkerReportView()">📊 Worker Report</button>
+                <button class="summary-btn" onclick="openSummaryModal()">📋 Net Salary Sheet</button>
             </div>
         </div>
 
@@ -436,8 +469,8 @@
 
         <div class="report-panel">
             <button class="action-btn-shared clear-btn" onclick="openClearModal()">🗑️ Clear</button>
-            <button class="action-btn-shared restore-btn" onclick="document.getElementById('importFile').click()">📥 Restore</button>
-            <button class="action-btn-shared csv-btn" onclick="exportToCSV()">📊 Export CSV</button>
+            <button class="action-btn-shared restore-btn" onclick="document.getElementById('importFile').click()">📥 Restore Full Backup</button>
+            <button class="action-btn-shared csv-btn" onclick="exportToCSV()">📊 Backup Full Data</button>
             <button class="action-btn-shared print-btn" onclick="openDateModal()">📄 Download PDF</button>
         </div>
     </div>
@@ -519,7 +552,10 @@
 
 <div id="advanceModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header" style="border-bottom-color: #ffc107;"><h3>💸 Advance (Cash)</h3><span class="close-modal" onclick="closeAdvanceModal()">&times;</span></div>
+        <div class="modal-header" style="border-bottom-color: #ffc107;">
+            <h3>💸 Advance (Cash)</h3>
+            <span class="close-modal" onclick="closeAdvanceModal()">&times;</span>
+        </div>
         <div class="modal-scrollable-body">
             <div class="form-group" style="margin-bottom:15px">
                 <label>Date</label>
@@ -533,14 +569,19 @@
                 <label>Amount (₹)</label>
                 <input type="number" id="advAmount" placeholder="Enter Amount">
             </div>
-            <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-            <div style="font-size:0.9em; font-weight:bold; margin-bottom:10px; opacity:0.7;">Recent Cash Advances</div>
-            <div id="advanceHistoryList" style="padding-bottom:10px;">
+            
+            <div class="modal-actions" style="padding: 0; border: none; margin-bottom: 20px;">
+                <button class="save-btn" style="background-color: #ffc107; color:#333; width:100%;" onclick="saveAdvance()">Save Cash Payment</button>
+            </div>
+
+            <div style="border-top: 2px dashed var(--border); padding-top: 15px; margin-top: 10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h4 style="margin:0; opacity:0.8;">📜 Recent History</h4>
+                    <button class="delete-btn" style="font-size: 0.8em; padding: 5px 10px;" onclick="clearAllAdvances()">🗑️ Clear All History</button>
                 </div>
-        </div>
-        <div class="modal-actions">
-            <button class="save-btn" style="background-color: #ffc107; color:#333;" onclick="saveAdvance()">Save Cash Payment</button>
-            <button class="cancel-btn" onclick="closeAdvanceModal()">Cancel</button>
+                <div id="advanceHistoryContainer" style="max-height: 200px; overflow-y: auto; background: var(--row-even); border: 1px solid var(--border); border-radius: 6px; color: var(--text-color);">
+                    </div>
+            </div>
         </div>
     </div>
 </div>
@@ -599,7 +640,35 @@
     </div>
 </div>
 
-
+<div id="summaryModal" class="modal">
+    <div class="modal-content wide-modal">
+        <div class="modal-header" style="border-bottom-color: #20c997;">
+            <h3>📋 Net Salary Sheet</h3>
+            <span class="close-modal" onclick="closeSummaryModal()">&times;</span>
+        </div>
+        <div class="modal-scrollable-body">
+            <div class="table-container" style="max-height: 50vh;">
+                <table id="summaryTable" style="font-size: 0.9em;">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Total Work (+)</th>
+                            <th>Cash Adv (-)</th>
+                            <th>Bank Transfer (-)</th>
+                            <th>Net Payable (=)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summaryTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="print-btn-large" onclick="printSummarySheet()">🖨️ Print Summary Sheet</button>
+            <button class="cancel-btn" style="width:100%; margin-top:5px;" onclick="closeSummaryModal()">Close</button>
+        </div>
+    </div>
+</div>
 
 <script>
     // --- RATES DATABASE ---
@@ -698,7 +767,8 @@
         document.getElementById('reportTotal').innerText = total.toFixed(2);
     }
 
-    // --- ADVANCE PAYMENT LOGIC WITH HISTORY ---
+    // --- UPDATED ADVANCE LOGIC WITH HISTORY ---
+
     function openAdvanceModal() {
         const today = new Date();
         const y = today.getFullYear();
@@ -707,61 +777,83 @@
         document.getElementById('advDate').value = `${y}-${m}-${d}`;
         document.getElementById('advWorker').value = '';
         document.getElementById('advAmount').value = '';
+        
+        // NEW: Load the history when opening
+        renderAdvanceHistory();
+        
         document.getElementById('advanceModal').style.display = 'flex';
-        renderAdvanceHistory(); // Load history when opening
     }
     
     function closeAdvanceModal() { document.getElementById('advanceModal').style.display = 'none'; }
     
+    function renderAdvanceHistory() {
+        const container = document.getElementById('advanceHistoryContainer');
+        
+        if (advances.length === 0) {
+            container.innerHTML = '<div style="padding:15px; text-align:center; opacity:0.6; font-size:0.9em;">No advance history found.</div>';
+            return;
+        }
+
+        // Sort by Newest First (High ID to Low ID)
+        const sorted = [...advances].sort((a, b) => b.id - a.id);
+
+        let html = '<table style="width:100%; font-size:0.85em; margin:0;">';
+        html += '<tr style="background:var(--table-header); color:white; position:sticky; top:0;"><th>Date</th><th>Name</th><th>Amt</th><th>Del</th></tr>';
+        
+        sorted.forEach(item => {
+            html += `<tr>
+                <td style="padding:8px;">${item.date}</td>
+                <td style="padding:8px;">${item.name}</td>
+                <td style="padding:8px; font-weight:bold;">₹${item.amount}</td>
+                <td style="text-align:center;">
+                    <button style="background:transparent; border:none; color:red; cursor:pointer;" onclick="deleteSingleAdvance(${item.id})">✖</button>
+                </td>
+            </tr>`;
+        });
+        
+        html += '</table>';
+        container.innerHTML = html;
+    }
+
+    // New Function: Clear ALL History
+    function clearAllAdvances() {
+        if (advances.length === 0) return alert("History is already empty.");
+        
+        if(confirm("⚠️ ARE YOU SURE?\n\nThis will delete ALL advance payment history permanently.\nThis cannot be undone.")) {
+            advances = [];
+            localStorage.setItem('advanceData', JSON.stringify(advances));
+            renderAdvanceHistory();
+            alert("All advance history cleared.");
+        }
+    }
+
+    // New Function: Delete Single Entry
+    function deleteSingleAdvance(id) {
+        if(confirm("Delete this single entry?")) {
+            advances = advances.filter(a => a.id !== id);
+            localStorage.setItem('advanceData', JSON.stringify(advances));
+            renderAdvanceHistory();
+        }
+    }
+
     function saveAdvance() {
         const dt = document.getElementById('advDate').value;
         const nm = document.getElementById('advWorker').value.trim();
         const amt = parseFloat(document.getElementById('advAmount').value);
         if(!dt || !nm || !amt) { alert("Please fill all details"); return; }
         const [y, m, d] = dt.split('-'); const fDate = `${d}/${m}/${y}`;
+        
         advances.push({ id: Date.now(), date: fDate, name: nm, amount: amt });
         localStorage.setItem('advanceData', JSON.stringify(advances));
-        alert("Cash Payment Saved!"); 
         
-        // Clear inputs and refresh list instead of closing
+        alert("Cash Payment Saved!");
+        
+        // Clear inputs so they can add another if they want
+        document.getElementById('advWorker').value = '';
         document.getElementById('advAmount').value = '';
+        
+        // Refresh the history list immediately
         renderAdvanceHistory();
-    }
-
-    function renderAdvanceHistory() {
-        const container = document.getElementById('advanceHistoryList');
-        container.innerHTML = '';
-        
-        // Sort by newest first
-        const sortedAdvances = [...advances].sort((a,b) => b.id - a.id);
-        
-        if(sortedAdvances.length === 0) {
-            container.innerHTML = '<div style="text-align:center; opacity:0.5;">No history yet.</div>';
-            return;
-        }
-
-        sortedAdvances.forEach(adv => {
-            const html = `
-            <div class="history-row">
-                <div class="hist-info">
-                    <div class="hist-date">${adv.date}</div>
-                    <div class="hist-name">${adv.name}</div>
-                </div>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <div class="hist-amt">₹${adv.amount}</div>
-                    <button onclick="deleteAdvance(${adv.id})" style="background:#dc3545; color:white; border:none; border-radius:4px; padding:2px 6px; cursor:pointer; font-size:0.8em;">X</button>
-                </div>
-            </div>`;
-            container.insertAdjacentHTML('beforeend', html);
-        });
-    }
-
-    function deleteAdvance(id) {
-        if(confirm("Delete this entry?")) {
-            advances = advances.filter(a => a.id !== id);
-            localStorage.setItem('advanceData', JSON.stringify(advances));
-            renderAdvanceHistory();
-        }
     }
 
     // --- BANK TRANSFER LOGIC (NO DATE INPUT) ---
@@ -819,6 +911,80 @@
         closeBankModal();
     }
 
+    // --- NEW SUMMARY SHEET LOGIC ---
+    function openSummaryModal() {
+        const tbody = document.getElementById('summaryTableBody');
+        tbody.innerHTML = '';
+
+        // Gather all unique names from Work, Advances, Bank and Worker List
+        const allNames = new Set([
+            ...entries.map(e => e.name),
+            ...advances.map(a => a.name),
+            ...bankTransfers.map(b => b.name),
+            ...workerList.map(w => w.name)
+        ]);
+        
+        const sortedNames = Array.from(allNames).sort();
+
+        if (sortedNames.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; opacity:0.6">No data available.</td></tr>';
+            document.getElementById('summaryModal').style.display = 'flex';
+            return;
+        }
+
+        sortedNames.forEach(name => {
+            // Calculate totals for this worker
+            const totalWork = entries.filter(e => e.name === name).reduce((sum, item) => sum + item.total, 0);
+            const totalAdv = advances.filter(a => a.name === name).reduce((sum, item) => sum + item.amount, 0);
+            const totalBank = bankTransfers.filter(b => b.name === name).reduce((sum, item) => sum + item.amount, 0);
+            
+            // Only show row if there is ANY activity
+            if (totalWork === 0 && totalAdv === 0 && totalBank === 0) return;
+
+            const netPayable = totalWork - totalAdv - totalBank;
+            const netClass = netPayable >= 0 ? 'summary-positive' : 'summary-negative';
+
+            tbody.insertAdjacentHTML('beforeend', `
+                <tr>
+                    <td style="font-weight:bold;">${name}</td>
+                    <td>₹${totalWork.toFixed(2)}</td>
+                    <td style="color:#d9534f">₹${totalAdv.toFixed(2)}</td>
+                    <td style="color:#6f42c1">₹${totalBank.toFixed(2)}</td>
+                    <td class="${netClass}">₹${netPayable.toFixed(2)}</td>
+                </tr>
+            `);
+        });
+
+        document.getElementById('summaryModal').style.display = 'flex';
+    }
+
+    function closeSummaryModal() {
+        document.getElementById('summaryModal').style.display = 'none';
+    }
+
+    function printSummarySheet() {
+        const content = document.getElementById('summaryTable').outerHTML;
+        const w = window.open('', '_blank');
+        w.document.write(`<html><head><title>Net Salary Sheet</title>
+        <style>
+            body{font-family:sans-serif; padding:20px;}
+            h1{text-align:center; border-bottom:2px solid #333;}
+            table{width:100%; border-collapse:collapse; margin-top:20px;}
+            th, td{border:1px solid #ccc; padding:10px; text-align:left;}
+            th{background:#eee;}
+            .summary-positive{color:green; font-weight:bold;}
+            .summary-negative{color:red; font-weight:bold;}
+        </style>
+        </head><body>
+            <h1>📋 Net Salary Summary Sheet</h1>
+            <center>Date: ${new Date().toLocaleDateString()}</center>
+            ${content}
+            <script>window.print()<\/script>
+        </body></html>`);
+        w.document.close();
+    }
+
+
     // --- PDF REPORT ---
     function downloadWorkerPDF() {
         const name = document.getElementById('reportWorkerName').value.trim();
@@ -875,7 +1041,7 @@
             <tr><td colspan="4" align="right"><b>Total Work:</b></td><td><b>${totalQty} Pcs</b></td><td><b>₹${totalAmt.toFixed(2)}</b></td></tr>
             <tr><td colspan="5" align="right" style="color:#d9534f"><b>Less: Cash Advance:</b></td><td style="color:#d9534f"><b>- ₹${totalAdvance.toFixed(2)}</b></td></tr>
             <tr><td colspan="5" align="right" style="color:#6f42c1"><b>Less: Bank Transfer:</b></td><td style="color:#6f42c1"><b>- ₹${totalBank.toFixed(2)}</b></td></tr>
-            <tr><td colspan="5" align="right" style="font-size:1.2em"><b>Net Payable:</b></td><td style="font-size:1.2em; border-top:2px solid #000; color:${net>=0?'green':'red'}"><b>₹${netPayable.toFixed(2)}</b></td></tr>
+            <tr><td colspan="5" align="right" style="font-size:1.2em"><b>Net Payable:</b></td><td style="font-size:1.2em; border-top:2px solid #000; color:${netPayable>=0?'green':'red'}"><b>₹${netPayable.toFixed(2)}</b></td></tr>
             </tfoot></table>`;
         
         if(workerAdvances.length > 0 || workerBank.length > 0) {
@@ -1035,21 +1201,81 @@
             saveData(); renderTable(); updateSuggestions(); closeClearModal();
         } else alert("Select both dates.");
     }
+    
+    // --- UPDATED EXPORT TO CSV (FULL BACKUP) ---
     function exportToCSV() {
-        if(!entries.length) return alert("No data");
-        let csv = "Date,Name,Category,Size,Type,Rate,Qty,Total\n" + entries.map(e=>`${e.date},${e.name},${e.category},${e.size},${e.type},${e.rate},${e.qty},${e.total}`).join('\n');
-        const a = document.createElement("a"); a.href = encodeURI("data:text/csv;charset=utf-8,"+csv); a.download="diamonds.csv"; document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        if (!entries.length && !advances.length && !bankTransfers.length && !workerList.length) { return alert("No data to export!"); }
+
+        let csv = "DataType,Date,Name,Category/Info,Size,Type,Rate,Qty,Amount/Total\n";
+
+        // Add WORK Entries
+        entries.forEach(e => { csv += `WORK,${e.date},${e.name},${e.category},${e.size},${e.type},${e.rate},${e.qty},${e.total}\n`; });
+        // Add ADVANCE Payments
+        advances.forEach(a => { csv += `ADVANCE,${a.date},${a.name},,,,,,${a.amount}\n`; });
+        // Add BANK Transfers
+        bankTransfers.forEach(b => { csv += `BANK,${b.date},${b.name},,,,,,${b.amount}\n`; });
+        // Add WORKER Settings
+        workerList.forEach(w => { csv += `WORKER,,${w.name},${w.defaultType},,,,0,${w.defaultBankSalary || 0}\n`; });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        const d = new Date();
+        const dateStr = `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
+        link.setAttribute("href", url);
+        link.setAttribute("download", `CVD_FullBackup_${dateStr}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
+
+    // --- UPDATED IMPORT CSV (FULL RESTORE) ---
     function importCSV(input) {
         const f = input.files[0]; if(!f) return;
-        const r = new FileReader(); r.onload = e => {
-            const l = e.target.result.split(/\r\n|\n/); if(l.length<2 || !confirm("Merge?")) return;
-            for(let i=1; i<l.length; i++) {
-                const c = l[i].trim().split(","); if(c.length>=7) entries.push({ id:Date.now()+i, date:c[0], name:c[1], category:c.length>=8?c[2]:'3EX', size:parseFloat(c[c.length>=8?3:2]), type:c[c.length>=8?4:3], rate:parseInt(c[c.length>=8?5:4]), qty:parseInt(c[c.length>=8?6:5]), total:parseFloat(c[c.length>=8?7:6]) });
+        const r = new FileReader();
+        r.onload = e => {
+            const lines = e.target.result.split(/\r\n|\n/);
+            if(lines.length < 2) return alert("File appears empty.");
+            if(!confirm("⚠️ RESTORE WARNING:\n\nThis will merge the backup data with your current data.\n\nDo you want to continue?")) { input.value = ''; return; }
+
+            let counts = { work:0, adv:0, bank:0, worker:0 };
+
+            for(let i=1; i<lines.length; i++) {
+                const row = lines[i].trim(); if(!row) continue;
+                const c = row.split(",");
+                const uID = Date.now() + i + Math.random();
+                const type = c[0].toUpperCase().trim();
+
+                if(type === 'WORK') {
+                    entries.push({ id:uID, date:c[1], name:c[2], category:c[3], size:parseFloat(c[4]), type:c[5], rate:parseInt(c[6]), qty:parseInt(c[7]), total:parseFloat(c[8]) });
+                    counts.work++;
+                } else if(type === 'ADVANCE') {
+                    advances.push({ id:uID, date:c[1], name:c[2], amount:parseFloat(c[8]) });
+                    counts.adv++;
+                } else if(type === 'BANK') {
+                    bankTransfers.push({ id:uID, date:c[1], name:c[2], amount:parseFloat(c[8]) });
+                    counts.bank++;
+                } else if(type === 'WORKER') {
+                    const idx = workerList.findIndex(w => w.name.toLowerCase() === c[2].toLowerCase());
+                    const wData = { name:c[2], defaultType:c[3], defaultBankSalary:parseFloat(c[8])||0 };
+                    if(idx > -1) workerList[idx] = wData; else workerList.push(wData);
+                    counts.worker++;
+                } else if(c.length >= 7 && type !== 'DATATYPE') {
+                    // Legacy Support
+                    entries.push({ id:uID, date:c[0], name:c[1], category:c.length>=8?c[2]:'3EX', size:parseFloat(c[c.length>=8?3:2]), type:c[c.length>=8?4:3], rate:parseInt(c[c.length>=8?5:4]), qty:parseInt(c[c.length>=8?6:5]), total:parseFloat(c[c.length>=8?7:6]) });
+                    counts.work++;
+                }
             }
-            saveData(); renderTable(); alert("Done"); input.value='';
-        }; r.readAsText(f);
+            saveData(); 
+            localStorage.setItem('advanceData', JSON.stringify(advances));
+            localStorage.setItem('bankData', JSON.stringify(bankTransfers));
+            saveWorkers();
+            renderTable(); updateSuggestions();
+            input.value = '';
+            alert(`✅ Restore Complete!\nImported:\n- ${counts.work} Work Entries\n- ${counts.adv} Cash Advances\n- ${counts.bank} Bank Transfers\n- ${counts.worker} Worker Profiles`);
+        };
+        r.readAsText(f);
     }
+
     function generateReport() {
         if (!entries.length) { alert("No data!"); return; }
         const s = document.getElementById('startDate').value;
