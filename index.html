@@ -1050,38 +1050,56 @@
     function closeBankModal() { document.getElementById('bankModal').style.display = 'none'; }
     
     function saveBankTransfer() {
-        // Automatically use TODAY'S DATE
+        // 1. Get Today's Date
         const today = new Date();
         const y = today.getFullYear();
         const m = String(today.getMonth() + 1).padStart(2, '0');
         const d = String(today.getDate()).padStart(2, '0');
         const fDate = `${d}/${m}/${y}`;
         
-        let count = 0;
+        let updatedCount = 0;
         
-        // Iterate through all inputs
+        // 2. Iterate through all inputs in the modal
         workerList.forEach((w, index) => {
             const inp = document.getElementById(`bank_input_${index}`);
-            const val = parseFloat(inp.value) || 0;
+            const val = parseFloat(inp.value) || 0; // Get the new value (or 0)
             
-            // 1. UPDATE DEFAULT SETTING (Memory)
+            // Update the "Default" memory for next time so it remembers what you typed
             w.defaultBankSalary = val;
 
-            // 2. CREATE TRANSACTION IF > 0
+            // 3. CHECK if an entry already exists for THIS worker on THIS date
+            const existingIndex = bankTransfers.findIndex(b => b.name === w.name && b.date === fDate);
+
             if (val > 0) {
-                bankTransfers.push({ id: Date.now() + index, date: fDate, name: w.name, amount: val });
-                count++;
+                // Case A: You entered a value (e.g., 5000)
+                if (existingIndex > -1) {
+                    // UPDATE existing entry
+                    bankTransfers[existingIndex].amount = val;
+                } else {
+                    // CREATE new entry
+                    bankTransfers.push({ id: Date.now() + index, date: fDate, name: w.name, amount: val });
+                }
+                updatedCount++;
+            } else {
+                // Case B: You entered 0
+                if (existingIndex > -1) {
+                    // REMOVE the existing entry so it calculates as 0
+                    bankTransfers.splice(existingIndex, 1);
+                }
             }
         });
 
-        // Save everything
+        // 4. Save everything
         saveWorkers(); 
         localStorage.setItem('bankData', JSON.stringify(bankTransfers)); 
         
-        if(count > 0) alert(`Saved ${count} bank payments for Today (${fDate})!`);
-        else alert("Defaults updated. No payments made (Amounts were 0).");
-        
+        alert("✅ Bank Salaries Updated!");
         closeBankModal();
+        
+        // Optional: Refresh summary or table if open (Not strictly necessary but good practice)
+        if(document.getElementById('summaryModal').style.display === 'flex') {
+            openSummaryModal(); 
+        }
     }
 
     // --- NEW SUMMARY SHEET LOGIC WITH TOTALS ---
@@ -1454,14 +1472,24 @@
         document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
-    // --- UPDATED IMPORT CSV (FULL RESTORE) ---
+    // --- UPDATED SMART IMPORT (Prevents Duplicates & Handles 0) ---
     function importCSV(input) {
         const f = input.files[0]; if(!f) return;
         const r = new FileReader();
         r.onload = e => {
             const lines = e.target.result.split(/\r\n|\n/);
             if(lines.length < 2) return alert("File appears empty.");
-            if(!confirm("⚠️ RESTORE WARNING:\n\nThis will merge the backup data with your current data.\n\nDo you want to continue?")) { input.value = ''; return; }
+            
+            // Ask user if they want to clear current data before importing
+            // This prevents "Double Stacking" if you import the same file twice
+            const clearFirst = confirm("❓ CLEAR DATA FIRST?\n\nClick 'OK' to DELETE current data and import this file.\nClick 'Cancel' to KEEP current data and MERGE this file.");
+            
+            if(clearFirst) {
+                entries = [];
+                advances = [];
+                bankTransfers = [];
+                // We don't clear workerList usually, to keep settings safe, but you can if needed.
+            }
 
             let counts = { work:0, adv:0, bank:0, worker:0 };
 
@@ -1472,32 +1500,57 @@
                 const type = c[0].toUpperCase().trim();
 
                 if(type === 'WORK') {
+                    // Work entries: Always allow multiple per day
                     entries.push({ id:uID, date:c[1], name:c[2], category:c[3], size:parseFloat(c[4]), type:c[5], rate:parseInt(c[6]), qty:parseInt(c[7]), total:parseFloat(c[8]) });
                     counts.work++;
+                    
                 } else if(type === 'ADVANCE') {
+                    // Advance entries: Always allow multiple (Cash can be given multiple times)
                     advances.push({ id:uID, date:c[1], name:c[2], amount:parseFloat(c[8]) });
                     counts.adv++;
+                    
                 } else if(type === 'BANK') {
-                    bankTransfers.push({ id:uID, date:c[1], name:c[2], amount:parseFloat(c[8]) });
-                    counts.bank++;
+                    // --- SMART BANK IMPORT LOGIC ---
+                    const bDate = c[1];
+                    const bName = c[2];
+                    const bAmt = parseFloat(c[8]) || 0;
+
+                    // Check if this worker already has a bank entry for this DATE
+                    const existingIndex = bankTransfers.findIndex(b => b.name === bName && b.date === bDate);
+
+                    if (bAmt > 0) {
+                        if (existingIndex > -1) {
+                            // If exists, OVERWRITE it (Latest value wins)
+                            bankTransfers[existingIndex].amount = bAmt;
+                        } else {
+                            // If not exists, ADD it
+                            bankTransfers.push({ id:uID, date:bDate, name:bName, amount:bAmt });
+                            counts.bank++;
+                        }
+                    } else {
+                        // If amount is 0, DO NOT ADD (or remove if exists)
+                        if (existingIndex > -1) {
+                            bankTransfers.splice(existingIndex, 1);
+                        }
+                    }
+
                 } else if(type === 'WORKER') {
                     const idx = workerList.findIndex(w => w.name.toLowerCase() === c[2].toLowerCase());
                     const wData = { name:c[2], defaultType:c[3], defaultBankSalary:parseFloat(c[8])||0 };
                     if(idx > -1) workerList[idx] = wData; else workerList.push(wData);
                     counts.worker++;
-                } else if(c.length >= 7 && type !== 'DATATYPE') {
-                    // Legacy Support
-                    entries.push({ id:uID, date:c[0], name:c[1], category:c.length>=8?c[2]:'3EX', size:parseFloat(c[c.length>=8?3:2]), type:c[c.length>=8?4:3], rate:parseInt(c[c.length>=8?5:4]), qty:parseInt(c[c.length>=8?6:5]), total:parseFloat(c[c.length>=8?7:6]) });
-                    counts.work++;
                 }
             }
+            
             saveData(); 
             localStorage.setItem('advanceData', JSON.stringify(advances));
             localStorage.setItem('bankData', JSON.stringify(bankTransfers));
             saveWorkers();
-            renderTable(); updateSuggestions();
+            renderTable(); 
+            updateSuggestions();
             input.value = '';
-            alert(`✅ Restore Complete!\nImported:\n- ${counts.work} Work Entries\n- ${counts.adv} Cash Advances\n- ${counts.bank} Bank Transfers\n- ${counts.worker} Worker Profiles`);
+            
+            alert(`✅ Restore Complete!\n\nImported (Merged):\n- ${counts.work} Work Entries\n- ${counts.adv} Cash Advances\n- ${counts.bank} Bank Transfers (Cleaned)\n- ${counts.worker} Worker Profiles`);
         };
         r.readAsText(f);
     }
