@@ -574,9 +574,9 @@
             <div id="rate-display" style="grid-column: 1/-1; font-style:italic; font-size:0.9em; margin-top:-5px;">Enter size...</div>
             
             <div class="action-group">
-                <button class="advance-btn" onclick="openAdvanceModal()">💸 Advance (Cash)</button>
+                <button class="advance-btn" onclick="openAdvanceModal()">💸 Monthly Advance</button>
                 
-                <button class="bank-btn" onclick="openBankModal()">🏦 Bank Transfer</button>
+                <button class="bank-btn" onclick="openBankModal()">🏦 Monthly Bank</button>
                 
                 <button class="add-btn" id="addBtn" onclick="addEntry()">Add to List</button>
                 
@@ -683,31 +683,31 @@
 <div id="advanceModal" class="modal">
     <div class="modal-content">
         <div class="modal-header" style="border-bottom-color: #ffc107;">
-            <h3>💸 Advance (Cash)</h3>
+            <h3>💸 Monthly Advance (Cash)</h3>
             <span class="close-modal" onclick="closeAdvanceModal()">&times;</span>
         </div>
         <div class="modal-scrollable-body">
-            <div class="form-group" style="margin-bottom:15px">
-                <label>Date</label>
-                <input type="date" id="advDate">
+            <div class="form-group" style="margin-bottom:15px; background: var(--row-even); padding:10px; border-radius:8px; border:1px solid #ffc107;">
+                <label>Select Month</label>
+                <input type="month" id="advMonth" style="font-weight:bold;">
             </div>
             <div class="form-group" style="margin-bottom:15px">
                 <label>Worker Name</label>
                 <input type="text" id="advWorker" list="nameSuggestions" placeholder="Select Worker">
             </div>
             <div class="form-group" style="margin-bottom:15px">
-                <label>Amount (₹)</label>
+                <label>Amount for this Month (₹)</label>
                 <input type="number" id="advAmount" placeholder="Enter Amount">
             </div>
             
             <div class="modal-actions" style="padding: 0; border: none; margin-bottom: 20px;">
-                <button class="save-btn" style="background-color: #ffc107; color:#333; width:100%;" onclick="saveAdvance()">Save Cash Payment</button>
+                <button class="save-btn" style="background-color: #ffc107; color:#333; width:100%;" onclick="saveAdvance()">Save / Update Monthly Advance</button>
             </div>
 
             <div style="border-top: 2px dashed var(--border); padding-top: 15px; margin-top: 10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <h4 style="margin:0; opacity:0.8;">📜 Recent History</h4>
-                    <button class="delete-btn" style="font-size: 0.8em; padding: 5px 10px;" onclick="clearAllAdvances()">🗑️ Clear All History</button>
+                    <h4 style="margin:0; opacity:0.8;">📜 History</h4>
+                    <button class="delete-btn" style="font-size: 0.8em; padding: 5px 10px;" onclick="clearAllAdvances()">🗑️ Clear All</button>
                 </div>
                 <div id="advanceHistoryContainer" style="max-height: 200px; overflow-y: auto; background: var(--row-even); border: 1px solid var(--border); border-radius: 6px; color: var(--text-color);">
                     </div>
@@ -718,14 +718,25 @@
 
 <div id="bankModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header" style="border-bottom-color: #6f42c1;"><h3>🏦 Bank Salaries</h3><span class="close-modal" onclick="closeBankModal()">&times;</span></div>
+        <div class="modal-header" style="border-bottom-color: #6f42c1;">
+            <h3>🏦 Monthly Bank Salaries</h3>
+            <span class="close-modal" onclick="closeBankModal()">&times;</span>
+        </div>
         <div class="modal-scrollable-body">
-            <div style="margin-bottom:15px; font-size:0.9em; opacity:0.7; text-align:center;">Enter fixed salaries. App remembers values.<br><b>Payment Date: Today</b></div>
+            <div class="form-group" style="margin-bottom:15px; background: var(--row-even); padding:10px; border-radius:8px; border:1px solid #6f42c1;">
+                <label style="color:#6f42c1;">📅 Select Salary Month:</label>
+                <input type="month" id="bankMonth" style="font-weight:bold;">
+            </div>
+            
+            <div style="margin-bottom:15px; font-size:0.9em; opacity:0.7; text-align:center;">
+                Enter total amount for the selected month.<br>
+                <b>(Re-entering updates existing amount)</b>
+            </div>
             <div id="bankListContainer">
-                </div>
+            </div>
         </div>
         <div class="modal-actions">
-            <button class="save-btn" style="background-color: #6f42c1; color:white;" onclick="saveBankTransfer()">Save Payments</button>
+            <button class="save-btn" style="background-color: #6f42c1; color:white;" onclick="saveBankTransfer()">Save / Update Bank Sheet</button>
             <button class="cancel-btn" onclick="closeBankModal()">Cancel</button>
         </div>
     </div>
@@ -777,6 +788,12 @@
             <span class="close-modal" onclick="closeSummaryModal()">&times;</span>
         </div>
         <div class="modal-scrollable-body">
+            <div style="display:flex; gap:10px; margin-bottom:15px; background:var(--row-even); padding:10px; border-radius:8px; align-items:center;">
+                <label style="margin:0;">📅 Select Month:</label>
+                <input type="month" id="summaryMonth" style="padding:8px; border-radius:4px; border:1px solid #ccc;">
+                <button class="summary-btn" style="padding:8px 15px; margin:0; font-size:0.9rem;" onclick="openSummaryModal()">Show</button>
+            </div>
+
             <div class="table-container" style="max-height: 50vh;">
                 <table id="summaryTable" style="font-size: 0.9em;">
                     <thead>
@@ -828,9 +845,11 @@
         const d = String(today.getDate()).padStart(2, '0');
         const todayStr = `${y}-${m}-${d}`;
         
+        // Set Default Date Inputs
         document.getElementById('entryDate').value = todayStr;
         document.getElementById('reportStartDate').value = todayStr;
         document.getElementById('reportEndDate').value = todayStr;
+        document.getElementById('summaryMonth').value = `${y}-${m}`; // Default to current month for summary
 
         const savedData = localStorage.getItem('diamondData');
         if (savedData) entries = JSON.parse(savedData);
@@ -881,14 +900,14 @@
             return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
         });
 
-        // 2. Filter Advances (Cash)
+        // 2. Filter Advances (Now captures monthly date 01/MM/YYYY)
         const workerAdvances = advances.filter(item => {
             const p = item.date.split('/'); 
             const itemDate = new Date(p[2], p[1]-1, p[0]);
             return (item.name.toLowerCase() === name.toLowerCase() && itemDate >= d1 && itemDate <= d2);
         });
 
-        // 3. Filter Bank Transfers
+        // 3. Filter Bank Transfers (Now captures monthly date 01/MM/YYYY)
         const workerBank = bankTransfers.filter(item => {
             const p = item.date.split('/'); 
             const itemDate = new Date(p[2], p[1]-1, p[0]);
@@ -925,8 +944,7 @@
         const netClass = netPayable >= 0 ? 'color:green' : 'color:red';
 
         // 4. Update the Total Section UI
-        // We replace the simple text with a detailed summary block
-        totalSection.style.display = 'block'; // Ensure it's block to hold divs
+        totalSection.style.display = 'block'; 
         totalSection.style.textAlign = 'right';
         totalSection.innerHTML = `
             <div style="display:flex; justify-content:flex-end; gap:30px; flex-wrap:wrap; font-size:1rem;">
@@ -940,20 +958,17 @@
         `;
     }
 
-    // --- UPDATED ADVANCE LOGIC WITH HISTORY ---
+    // --- UPDATED MONTHLY ADVANCE LOGIC ---
 
     function openAdvanceModal() {
         const today = new Date();
         const y = today.getFullYear();
         const m = String(today.getMonth() + 1).padStart(2, '0');
-        const d = String(today.getDate()).padStart(2, '0');
-        document.getElementById('advDate').value = `${y}-${m}-${d}`;
+        document.getElementById('advMonth').value = `${y}-${m}`; // Default current month
         document.getElementById('advWorker').value = '';
         document.getElementById('advAmount').value = '';
         
-        // NEW: Load the history when opening
         renderAdvanceHistory();
-        
         document.getElementById('advanceModal').style.display = 'flex';
     }
     
@@ -967,7 +982,6 @@
             return;
         }
 
-        // Sort by Newest First (High ID to Low ID)
         const sorted = [...advances].sort((a, b) => b.id - a.id);
 
         let html = '<table style="width:100%; font-size:0.85em; margin:0;">';
@@ -988,10 +1002,8 @@
         container.innerHTML = html;
     }
 
-    // New Function: Clear ALL History
     function clearAllAdvances() {
         if (advances.length === 0) return alert("History is already empty.");
-        
         if(confirm("⚠️ ARE YOU SURE?\n\nThis will delete ALL advance payment history permanently.\nThis cannot be undone.")) {
             advances = [];
             localStorage.setItem('advanceData', JSON.stringify(advances));
@@ -1000,7 +1012,6 @@
         }
     }
 
-    // New Function: Delete Single Entry
     function deleteSingleAdvance(id) {
         if(confirm("Delete this single entry?")) {
             advances = advances.filter(a => a.id !== id);
@@ -1010,31 +1021,45 @@
     }
 
     function saveAdvance() {
-        const dt = document.getElementById('advDate').value;
+        const monthStr = document.getElementById('advMonth').value; // YYYY-MM
         const nm = document.getElementById('advWorker').value.trim();
         const amt = parseFloat(document.getElementById('advAmount').value);
-        if(!dt || !nm || !amt) { alert("Please fill all details"); return; }
-        const [y, m, d] = dt.split('-'); const fDate = `${d}/${m}/${y}`;
         
-        advances.push({ id: Date.now(), date: fDate, name: nm, amount: amt });
+        if(!monthStr || !nm || !amt) { alert("Please fill all details"); return; }
+        
+        // Convert YYYY-MM to 01/MM/YYYY for standardized monthly storage
+        const [y, m] = monthStr.split('-');
+        const fDate = `01/${m}/${y}`;
+        
+        // CHECK IF ENTRY EXISTS (Update logic)
+        const existingIndex = advances.findIndex(a => a.name.toLowerCase() === nm.toLowerCase() && a.date === fDate);
+
+        if(existingIndex > -1) {
+             // Update existing
+             advances[existingIndex].amount = amt;
+             alert(`Updated Advance for ${nm} in ${m}/${y}`);
+        } else {
+             // Create new
+             advances.push({ id: Date.now(), date: fDate, name: nm, amount: amt });
+             alert(`Saved Advance for ${nm}`);
+        }
+
         localStorage.setItem('advanceData', JSON.stringify(advances));
         
-        alert("Cash Payment Saved!");
-        
-        // Clear inputs so they can add another if they want
-        document.getElementById('advWorker').value = '';
         document.getElementById('advAmount').value = '';
-        
-        // Refresh the history list immediately
         renderAdvanceHistory();
     }
 
-    // --- BANK TRANSFER LOGIC (NO DATE INPUT) ---
+    // --- UPDATED MONTHLY BANK TRANSFER LOGIC ---
     function openBankModal() {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = String(today.getMonth() + 1).padStart(2, '0');
+        document.getElementById('bankMonth').value = `${y}-${m}`;
+
         const container = document.getElementById('bankListContainer');
         container.innerHTML = '';
         
-        // Render List of Workers with Stored Values
         workerList.forEach((w, index) => {
             const defaultAmt = w.defaultBankSalary || 0;
             const html = `
@@ -1050,65 +1075,71 @@
     function closeBankModal() { document.getElementById('bankModal').style.display = 'none'; }
     
     function saveBankTransfer() {
-        // 1. Get Today's Date
-        const today = new Date();
-        const y = today.getFullYear();
-        const m = String(today.getMonth() + 1).padStart(2, '0');
-        const d = String(today.getDate()).padStart(2, '0');
-        const fDate = `${d}/${m}/${y}`;
+        const monthStr = document.getElementById('bankMonth').value;
+        if(!monthStr) { alert("Please select a Month."); return; }
+
+        const [y, m] = monthStr.split('-');
+        const fDate = `01/${m}/${y}`;
         
         let updatedCount = 0;
         
-        // 2. Iterate through all inputs in the modal
         workerList.forEach((w, index) => {
             const inp = document.getElementById(`bank_input_${index}`);
-            const val = parseFloat(inp.value) || 0; // Get the new value (or 0)
+            const val = parseFloat(inp.value) || 0; 
             
-            // Update the "Default" memory for next time so it remembers what you typed
             w.defaultBankSalary = val;
 
-            // 3. CHECK if an entry already exists for THIS worker on THIS date
             const existingIndex = bankTransfers.findIndex(b => b.name === w.name && b.date === fDate);
 
             if (val > 0) {
-                // Case A: You entered a value (e.g., 5000)
                 if (existingIndex > -1) {
-                    // UPDATE existing entry
                     bankTransfers[existingIndex].amount = val;
                 } else {
-                    // CREATE new entry
                     bankTransfers.push({ id: Date.now() + index, date: fDate, name: w.name, amount: val });
                 }
                 updatedCount++;
             } else {
-                // Case B: You entered 0
                 if (existingIndex > -1) {
-                    // REMOVE the existing entry so it calculates as 0
                     bankTransfers.splice(existingIndex, 1);
                 }
             }
         });
 
-        // 4. Save everything
         saveWorkers(); 
         localStorage.setItem('bankData', JSON.stringify(bankTransfers)); 
         
-        alert("✅ Bank Salaries Updated!");
+        alert(`✅ Bank Salaries Saved for ${m}/${y}!`);
         closeBankModal();
         
-        // Optional: Refresh summary or table if open (Not strictly necessary but good practice)
         if(document.getElementById('summaryModal').style.display === 'flex') {
             openSummaryModal(); 
         }
     }
 
-    // --- NEW SUMMARY SHEET LOGIC WITH TOTALS ---
-    // --- NEW SUMMARY SHEET LOGIC WITH SPLIT TOTALS ---
+    // --- UPDATED SUMMARY SHEET WITH MONTH FILTER ---
     function openSummaryModal() {
+        // Get Selected Month
+        const monthStr = document.getElementById('summaryMonth').value;
+        
+        // If no month is selected (first run), default to current
+        if(!monthStr) {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            document.getElementById('summaryMonth').value = `${y}-${m}`;
+            // Recursive call to reload with default value
+            setTimeout(openSummaryModal, 10);
+            return;
+        }
+
+        const [y, m] = monthStr.split('-');
+        // Define date range for this month
+        const d1 = new Date(parseInt(y), parseInt(m)-1, 1);
+        const d2 = new Date(parseInt(y), parseInt(m), 0, 23, 59, 59);
+
         const tbody = document.getElementById('summaryTableBody');
         tbody.innerHTML = '';
 
-        // Gather all unique names
         const allNames = new Set([
             ...entries.map(e => e.name),
             ...advances.map(a => a.name),
@@ -1118,44 +1149,46 @@
         
         const sortedNames = Array.from(allNames).sort();
 
-        // --- VARIABLES FOR GRAND TOTALS ---
         let grandTotalWork = 0;
         let grandTotalAdv = 0;
         let grandTotalBank = 0;
-        
-        // Split Net Totals (Green vs Red)
-        let totalPayable = 0;   // Sum of positive amounts (Green)
-        let totalReceivable = 0; // Sum of negative amounts (Red)
+        let totalPayable = 0;   
+        let totalReceivable = 0; 
 
-        if (sortedNames.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; opacity:0.6">No data available.</td></tr>';
-            document.getElementById('summaryModal').style.display = 'flex';
-            return;
-        }
+        let hasData = false;
 
         sortedNames.forEach(name => {
-            // Calculate totals for this worker
-            const totalWork = entries.filter(e => e.name === name).reduce((sum, item) => sum + item.total, 0);
-            const totalAdv = advances.filter(a => a.name === name).reduce((sum, item) => sum + item.amount, 0);
-            const totalBank = bankTransfers.filter(b => b.name === name).reduce((sum, item) => sum + item.amount, 0);
+            // Filter Data by Name AND Date Range
+            const totalWork = entries.filter(item => {
+                const p = item.date.split('/'); 
+                const itemDate = new Date(p[2], p[1]-1, p[0]);
+                return (item.name === name && itemDate >= d1 && itemDate <= d2);
+            }).reduce((sum, item) => sum + item.total, 0);
+
+            const totalAdv = advances.filter(item => {
+                const p = item.date.split('/'); 
+                const itemDate = new Date(p[2], p[1]-1, p[0]);
+                return (item.name === name && itemDate >= d1 && itemDate <= d2);
+            }).reduce((sum, item) => sum + item.amount, 0);
+
+            const totalBank = bankTransfers.filter(item => {
+                const p = item.date.split('/'); 
+                const itemDate = new Date(p[2], p[1]-1, p[0]);
+                return (item.name === name && itemDate >= d1 && itemDate <= d2);
+            }).reduce((sum, item) => sum + item.amount, 0);
             
-            // Only show row if there is ANY activity
             if (totalWork === 0 && totalAdv === 0 && totalBank === 0) return;
+            
+            hasData = true;
 
             const netPayable = totalWork - totalAdv - totalBank;
             const netClass = netPayable >= 0 ? 'summary-positive' : 'summary-negative';
 
-            // --- ACCUMULATE TO GRAND TOTALS ---
             grandTotalWork += totalWork;
             grandTotalAdv += totalAdv;
             grandTotalBank += totalBank;
             
-            // SPLIT ACCUMULATION FOR NET PAYABLE
-            if (netPayable >= 0) {
-                totalPayable += netPayable;
-            } else {
-                totalReceivable += netPayable;
-            }
+            if (netPayable >= 0) totalPayable += netPayable; else totalReceivable += netPayable;
 
             tbody.insertAdjacentHTML('beforeend', `
                 <tr>
@@ -1168,20 +1201,22 @@
             `);
         });
 
-        // --- APPEND GRAND TOTAL ROW ---
-        // We display BOTH totals (Payable & Receivable) in the last cell
-        tbody.insertAdjacentHTML('beforeend', `
-            <tr style="background-color:var(--row-even); border-top: 2px solid var(--text-color); font-weight:bold; font-size:1.05em;">
-                <td style="text-align:right;">TOTAL:</td>
-                <td>₹${grandTotalWork.toFixed(2)}</td>
-                <td style="color:#d9534f">₹${grandTotalAdv.toFixed(2)}</td>
-                <td style="color:#6f42c1">₹${grandTotalBank.toFixed(2)}</td>
-                <td>
-                    <div style="color:green; border-bottom:1px solid #ccc; padding-bottom:2px;">Pay: ₹${totalPayable.toFixed(2)}</div>
-                    <div style="color:red; padding-top:2px;">Rec: ₹${totalReceivable.toFixed(2)}</div>
-                </td>
-            </tr>
-        `);
+        if (!hasData) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; opacity:0.6">No data for selected month.</td></tr>';
+        } else {
+            tbody.insertAdjacentHTML('beforeend', `
+                <tr style="background-color:var(--row-even); border-top: 2px solid var(--text-color); font-weight:bold; font-size:1.05em;">
+                    <td style="text-align:right;">TOTAL:</td>
+                    <td>₹${grandTotalWork.toFixed(2)}</td>
+                    <td style="color:#d9534f">₹${grandTotalAdv.toFixed(2)}</td>
+                    <td style="color:#6f42c1">₹${grandTotalBank.toFixed(2)}</td>
+                    <td>
+                        <div style="color:green; border-bottom:1px solid #ccc; padding-bottom:2px;">Pay: ₹${totalPayable.toFixed(2)}</div>
+                        <div style="color:red; padding-top:2px;">Rec: ₹${totalReceivable.toFixed(2)}</div>
+                    </td>
+                </tr>
+            `);
+        }
 
         document.getElementById('summaryModal').style.display = 'flex';
     }
@@ -1192,6 +1227,7 @@
 
     function printSummarySheet() {
         const content = document.getElementById('summaryTable').outerHTML;
+        const m = document.getElementById('summaryMonth').value;
         const w = window.open('', '_blank');
         w.document.write(`<html><head><title>Net Salary Sheet</title>
         <style>
@@ -1205,7 +1241,7 @@
         </style>
         </head><body>
             <h1>📋 Net Salary Summary Sheet</h1>
-            <center>Date: ${new Date().toLocaleDateString()}</center>
+            <center><h3>Month: ${m}</h3></center>
             ${content}
             <script>window.print()<\/script>
         </body></html>`);
@@ -1446,7 +1482,7 @@
         } else alert("Select both dates.");
     }
     
-    // --- UPDATED EXPORT TO CSV (FULL BACKUP) ---
+    // --- EXPORT TO CSV (FULL BACKUP) ---
     function exportToCSV() {
         if (!entries.length && !advances.length && !bankTransfers.length && !workerList.length) { return alert("No data to export!"); }
 
@@ -1472,7 +1508,7 @@
         document.body.appendChild(link); link.click(); document.body.removeChild(link);
     }
 
-    // --- UPDATED SMART IMPORT (Prevents Duplicates & Handles 0) ---
+    // --- SMART IMPORT ---
     function importCSV(input) {
         const f = input.files[0]; if(!f) return;
         const r = new FileReader();
@@ -1480,15 +1516,12 @@
             const lines = e.target.result.split(/\r\n|\n/);
             if(lines.length < 2) return alert("File appears empty.");
             
-            // Ask user if they want to clear current data before importing
-            // This prevents "Double Stacking" if you import the same file twice
             const clearFirst = confirm("❓ CLEAR DATA FIRST?\n\nClick 'OK' to DELETE current data and import this file.\nClick 'Cancel' to KEEP current data and MERGE this file.");
             
             if(clearFirst) {
                 entries = [];
                 advances = [];
                 bankTransfers = [];
-                // We don't clear workerList usually, to keep settings safe, but you can if needed.
             }
 
             let counts = { work:0, adv:0, bank:0, worker:0 };
@@ -1500,40 +1533,28 @@
                 const type = c[0].toUpperCase().trim();
 
                 if(type === 'WORK') {
-                    // Work entries: Always allow multiple per day
                     entries.push({ id:uID, date:c[1], name:c[2], category:c[3], size:parseFloat(c[4]), type:c[5], rate:parseInt(c[6]), qty:parseInt(c[7]), total:parseFloat(c[8]) });
                     counts.work++;
                     
                 } else if(type === 'ADVANCE') {
-                    // Advance entries: Always allow multiple (Cash can be given multiple times)
+                    // Update check included in save logic, but for raw import we usually just append or merge
+                    // Since the user might be restoring a backup, we allow duplicates if they are legitimate history
+                    // BUT for our monthly logic, we should probably check if restoring causes overlap.
+                    // For simplicity in backup restore, we trust the backup file.
                     advances.push({ id:uID, date:c[1], name:c[2], amount:parseFloat(c[8]) });
                     counts.adv++;
                     
                 } else if(type === 'BANK') {
-                    // --- SMART BANK IMPORT LOGIC ---
                     const bDate = c[1];
                     const bName = c[2];
                     const bAmt = parseFloat(c[8]) || 0;
-
-                    // Check if this worker already has a bank entry for this DATE
+                    
+                    // Basic merge logic for Bank
                     const existingIndex = bankTransfers.findIndex(b => b.name === bName && b.date === bDate);
-
                     if (bAmt > 0) {
-                        if (existingIndex > -1) {
-                            // If exists, OVERWRITE it (Latest value wins)
-                            bankTransfers[existingIndex].amount = bAmt;
-                        } else {
-                            // If not exists, ADD it
-                            bankTransfers.push({ id:uID, date:bDate, name:bName, amount:bAmt });
-                            counts.bank++;
-                        }
-                    } else {
-                        // If amount is 0, DO NOT ADD (or remove if exists)
-                        if (existingIndex > -1) {
-                            bankTransfers.splice(existingIndex, 1);
-                        }
+                        if (existingIndex > -1) { bankTransfers[existingIndex].amount = bAmt; } 
+                        else { bankTransfers.push({ id:uID, date:bDate, name:bName, amount:bAmt }); counts.bank++; }
                     }
-
                 } else if(type === 'WORKER') {
                     const idx = workerList.findIndex(w => w.name.toLowerCase() === c[2].toLowerCase());
                     const wData = { name:c[2], defaultType:c[3], defaultBankSalary:parseFloat(c[8])||0 };
@@ -1550,7 +1571,7 @@
             updateSuggestions();
             input.value = '';
             
-            alert(`✅ Restore Complete!\n\nImported (Merged):\n- ${counts.work} Work Entries\n- ${counts.adv} Cash Advances\n- ${counts.bank} Bank Transfers (Cleaned)\n- ${counts.worker} Worker Profiles`);
+            alert(`✅ Restore Complete!\n\nImported (Merged):\n- ${counts.work} Work Entries\n- ${counts.adv} Cash Advances\n- ${counts.bank} Bank Transfers\n- ${counts.worker} Worker Profiles`);
         };
         r.readAsText(f);
     }
