@@ -799,7 +799,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Total Work (+)</th>
+                            <th>Total Size (Cts)</th> <th>Total Work (+)</th>
                             <th>Cash Adv (-)</th>
                             <th>Bank Transfer (-)</th>
                             <th>Net Payable (=)</th>
@@ -880,7 +880,7 @@
     function openWorkerReportView() { document.getElementById('mainView').style.display = 'none'; document.getElementById('workerReportView').style.display = 'block'; }
     function closeWorkerReportView() { document.getElementById('workerReportView').style.display = 'none'; document.getElementById('mainView').style.display = 'block'; }
 
-    // --- UPDATED REPORT VIEW LOGIC ---
+    // --- UPDATED REPORT VIEW LOGIC (With Total Size) ---
     function generateSpecificReport() {
         const name = document.getElementById('reportWorkerName').value.trim();
         const s = document.getElementById('reportStartDate').value;
@@ -918,6 +918,7 @@
         let totalWork = 0;
         let totalAdv = 0;
         let totalBank = 0;
+        let totalSize = 0; // NEW: Total Size variable
 
         // Calculate Work Total & Render Table
         if(filtered.length === 0) {
@@ -930,6 +931,7 @@
 
             filtered.forEach(r => {
                 totalWork += r.total;
+                totalSize += r.size; // NEW: Add size
                 let c = (r.category==='Commercial')?'commercial-row':(r.category==='Fancy')?'fancy-row':'';
                 tbody.insertAdjacentHTML('beforeend', `<tr class="${c}"><td>${r.date}</td><td>${r.size.toFixed(2)}</td><td>${r.type}</td><td>${r.rate}</td><td>${r.qty}</td><td><strong>₹${r.total.toFixed(2)}</strong></td></tr>`);
             });
@@ -948,6 +950,7 @@
         totalSection.style.textAlign = 'right';
         totalSection.innerHTML = `
             <div style="display:flex; justify-content:flex-end; gap:30px; flex-wrap:wrap; font-size:1rem;">
+                <div style="color:var(--primary)">Total Size: <b>${totalSize.toFixed(2)} Cts</b></div>
                 <div>Total Work: <b>₹${totalWork.toFixed(2)}</b></div>
                 <div style="color:#d9534f">Cash Adv: <b>- ₹${totalAdv.toFixed(2)}</b></div>
                 <div style="color:#6f42c1">Bank Transfer: <b>- ₹${totalBank.toFixed(2)}</b></div>
@@ -1116,7 +1119,7 @@
         }
     }
 
-    // --- UPDATED SUMMARY SHEET WITH MONTH FILTER ---
+    // --- UPDATED SUMMARY SHEET WITH TOTAL SIZE COLUMN ---
     function openSummaryModal() {
         // Get Selected Month
         const monthStr = document.getElementById('summaryMonth').value;
@@ -1152,6 +1155,7 @@
         let grandTotalWork = 0;
         let grandTotalAdv = 0;
         let grandTotalBank = 0;
+        let grandTotalSize = 0; // NEW: Grand Total Size
         let totalPayable = 0;   
         let totalReceivable = 0; 
 
@@ -1159,11 +1163,15 @@
 
         sortedNames.forEach(name => {
             // Filter Data by Name AND Date Range
-            const totalWork = entries.filter(item => {
+            const workerEntries = entries.filter(item => {
                 const p = item.date.split('/'); 
                 const itemDate = new Date(p[2], p[1]-1, p[0]);
                 return (item.name === name && itemDate >= d1 && itemDate <= d2);
-            }).reduce((sum, item) => sum + item.total, 0);
+            });
+
+            // Calculate Totals
+            const totalWork = workerEntries.reduce((sum, item) => sum + item.total, 0);
+            const totalSize = workerEntries.reduce((sum, item) => sum + item.size, 0); // NEW: Calculate Worker Size
 
             const totalAdv = advances.filter(item => {
                 const p = item.date.split('/'); 
@@ -1187,13 +1195,14 @@
             grandTotalWork += totalWork;
             grandTotalAdv += totalAdv;
             grandTotalBank += totalBank;
+            grandTotalSize += totalSize; // Add to Grand Total
             
             if (netPayable >= 0) totalPayable += netPayable; else totalReceivable += netPayable;
 
             tbody.insertAdjacentHTML('beforeend', `
                 <tr>
                     <td style="font-weight:bold;">${name}</td>
-                    <td>₹${totalWork.toFixed(2)}</td>
+                    <td>${totalSize.toFixed(2)}</td> <td>₹${totalWork.toFixed(2)}</td>
                     <td style="color:#d9534f">₹${totalAdv.toFixed(2)}</td>
                     <td style="color:#6f42c1">₹${totalBank.toFixed(2)}</td>
                     <td class="${netClass}">₹${netPayable.toFixed(2)}</td>
@@ -1202,12 +1211,12 @@
         });
 
         if (!hasData) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; opacity:0.6">No data for selected month.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; opacity:0.6">No data for selected month.</td></tr>';
         } else {
             tbody.insertAdjacentHTML('beforeend', `
                 <tr style="background-color:var(--row-even); border-top: 2px solid var(--text-color); font-weight:bold; font-size:1.05em;">
                     <td style="text-align:right;">TOTAL:</td>
-                    <td>₹${grandTotalWork.toFixed(2)}</td>
+                    <td>${grandTotalSize.toFixed(2)}</td> <td>₹${grandTotalWork.toFixed(2)}</td>
                     <td style="color:#d9534f">₹${grandTotalAdv.toFixed(2)}</td>
                     <td style="color:#6f42c1">₹${grandTotalBank.toFixed(2)}</td>
                     <td>
@@ -1249,7 +1258,7 @@
     }
 
 
-    // --- PDF REPORT ---
+    // --- PDF REPORT (UPDATED WITH TOTAL SIZE) ---
     function downloadWorkerPDF() {
         const name = document.getElementById('reportWorkerName').value.trim();
         const s = document.getElementById('reportStartDate').value;
@@ -1302,7 +1311,13 @@
         const netPayable = totalAmt - totalAdvance - totalBank;
 
         h += `</tbody><tfoot>
-            <tr><td colspan="4" align="right"><b>Total Work:</b></td><td><b>${totalQty} Pcs</b></td><td><b>₹${totalAmt.toFixed(2)}</b></td></tr>
+            <tr>
+                <td colspan="2" align="right"><b>Totals:</b></td>
+                <td><b>${totalSize.toFixed(2)} Cts</b></td>
+                <td align="center">-</td>
+                <td><b>${totalQty} Pcs</b></td>
+                <td><b>₹${totalAmt.toFixed(2)}</b></td>
+            </tr>
             <tr><td colspan="5" align="right" style="color:#d9534f"><b>Less: Cash Advance:</b></td><td style="color:#d9534f"><b>- ₹${totalAdvance.toFixed(2)}</b></td></tr>
             <tr><td colspan="5" align="right" style="color:#6f42c1"><b>Less: Bank Transfer:</b></td><td style="color:#6f42c1"><b>- ₹${totalBank.toFixed(2)}</b></td></tr>
             <tr><td colspan="5" align="right" style="font-size:1.2em"><b>Net Payable:</b></td><td style="font-size:1.2em; border-top:2px solid #000; color:${netPayable>=0?'green':'red'}"><b>₹${netPayable.toFixed(2)}</b></td></tr>
@@ -1642,7 +1657,11 @@
             }
             
             h += `</tbody><tfoot>
-                <tr><td colspan="2" align="right"><b>Total Work:</b></td><td><b>${wSize.toFixed(2)}</b></td><td>-</td><td><b>${wQty}</b></td><td><b>₹${wt.toFixed(2)}</b></td></tr>
+                <tr><td colspan="2" align="right"><b>Totals:</b></td>
+                <td><b>${wSize.toFixed(2)} Cts</b></td> <td align="center">-</td>
+                <td><b>${wQty} Pcs</b></td>
+                <td><b>₹${wt.toFixed(2)}</b></td>
+            </tr>
                 <tr><td colspan="5" align="right" style="color:#d9534f"><b>Less: Cash Advance:</b></td><td style="color:#d9534f"><b>- ₹${wAdvTotal.toFixed(2)}</b></td></tr>
                 <tr><td colspan="5" align="right" style="color:#6f42c1"><b>Less: Bank Transfer:</b></td><td style="color:#6f42c1"><b>- ₹${wBankTotal.toFixed(2)}</b></td></tr>
                 <tr><td colspan="5" align="right" style="font-size:1.1em"><b>Net Payable:</b></td><td style="font-size:1.1em; border-top:2px solid #000; color:${net>=0?'green':'red'}"><b>₹${net.toFixed(2)}</b></td></tr>
