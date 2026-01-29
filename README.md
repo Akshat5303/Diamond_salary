@@ -1,16 +1,54 @@
 # 💎 CVD Diamond Manager Pro
 
-**Current Version:** 3.0.0
-**Developer:** Akshat Dhanani
-**Platform:** Web Application (Offline-First, Mobile-Optimized)
+**A professional, comprehensive management solution for the Diamond Industry.** *Designed & Developed by Akshat Dhanani.*
 
 ---
 
-## 📖 Overview
+## 📖 About The Project
 
-**CVD Diamond Manager Pro** is an enterprise-grade inventory and salary management system specifically engineered for the Diamond Manufacturing Industry. It provides a secure, digital replacement for manual paper ledgers, automating complex calculations for worker salaries based on diamond size, type, and market rates.
+**CVD Diamond Manager Pro** is a high-performance, single-page web application designed to streamline the daily operations of diamond polishing units. It replaces traditional paper-based entries with a digital, automated system.
 
-This software is built with a **Privacy-First Architecture**, ensuring that sensitive financial data is stored locally on the user's device and never transmitted to external servers.
+This software manages the entire lifecycle of worker wages—from daily diamond entry (Size/Rate/Type) to monthly cash advances, bank transfers, and final net salary calculation. It is built with a **Mobile-First** approach, ensuring it looks and feels like a native app on smartphones.
+
+### 🌟 Key Features
+
+* **📱 Mobile-Optimized Interface:** Responsive design that works perfectly on mobile devices with an "App-like" feel.
+* **🌙 Dark Mode:** Integrated toggle for eye protection during night shifts.
+* **💎 Advanced Inventory Entry:**
+    * Supports multiple diamond categories: **3EX, Commercial, and Fancy**.
+    * Automatic Rate Card lookup based on diamond size.
+    * **Rapid Entry System:** Press 'Enter' to quickly add rows.
+* **💸 Financial Management:**
+    * **Monthly Advances:** Track cash advances given to workers.
+    * **Bank Transfers:** Manage fixed monthly bank salaries.
+    * **Net Salary Sheet:** Automatically calculates: *(Total Work - Advances - Bank Transfer) = Net Payable*.
+* **📊 Comprehensive Reporting:**
+    * **Worker Report:** Detailed PDF reports with **Total Size (Cts)** and amount calculations.
+    * **Summary Sheet:** Printable monthly salary sheet for all workers.
+* **🛡️ Data Safety & Backup:**
+    * **Smart Backup:** One-click CSV export of all data.
+    * **Restore:** Restore full database from backup files.
+    * **Privacy:** All data is stored locally in the browser (LocalStorage). No data is sent to external servers.
+
+---
+
+## 🛠️ Technology Stack
+
+This project uses a lightweight, high-performance stack with no external dependencies:
+
+* **HTML5** (Semantic Structure)
+* **CSS3** (Variables, Flexbox, Grid, Animations)
+* **JavaScript (ES6+)** (Core Logic, DOM Manipulation)
+* **LocalStorage API** (Database persistence)
+* **FontAwesome** (Icons)
+
+---
+
+## 🔒 Privacy & Data Security
+
+* **Zero-Server Policy:** This application does not store data on any cloud server.
+* **Client-Side Storage:** All entries, worker names, and financial data are stored securely in the user's browser (LocalStorage).
+* **Recommendation:** Users are advised to use the **"Backup Full Data"** button weekly to prevent data loss if browser cache is cleared.
 
 ---
 
@@ -29,61 +67,23 @@ This software is **not open-source**. It is a commercial product protected by co
 
 ---
 
-## 🚀 Version History & Evolution
+## 🗺️ Roadmap
 
-### **v3.0.0 - Enterprise Edition (Current)**
-*Released: 2025*
-* **Multi-Category Architecture:** Added support for three distinct diamond markets with independent logic engines:
-    * **3EX (Standard):** Supports T, P, M, F types.
-    * **Commercial:** Dedicated rate card with Yellow visual cues.
-    * **Fancy:** Specialized "Full/Border" logic with Pink visual cues.
-* **Smart "TP" Logic:** Introduced an auto-calculation engine for "TP" type (T + P rate summation).
-* **Advanced Tabbed Settings:** New centralized control panel with tabs to manage rate cards for all three categories without page reloads.
-* **Fixed Grid Layout:** Professional, error-proof interface for updating market rates.
-* **Smart Defaults:** Auto-fills "Quantity = 1" to accelerate high-volume data entry.
+Future updates planned for CVD Diamond Manager:
 
-### **v2.0.0 - Professional Edition**
-* **Mobile-First Redesign:** Complete UI overhaul with stacked buttons and touch-friendly inputs for optimal phone usage.
-* **PDF Reporting Engine:** Added one-click generation of professional salary invoices, grouped by Worker Name with automatic subtotals.
-* **Data Safety Suite:** Implemented **Export CSV (Backup)** and **Restore CSV** functionality to prevent data loss.
-* **Theme Engine:** Added a toggleable **Dark Mode/Light Mode** for comfortable night-time usage.
-* **Persistence:** Migrated to `LocalStorage` database to save data instantly and work offline.
-
-### **v1.0.0 - Basic Utility**
-* **Core Calculator:** Simple form for entering Worker Name, Size, Type, and Quantity.
-* **Basic List:** Displayed a simple chronological list of entries.
-* **Manual Rate Lookup:** Basic support for calculating totals based on a static rate.
+- [ ] 📈 Dashboard with charts (Monthly growth analysis).
+- [ ] 🔐 PIN/Password protection for settings.
+- [ ] 🌍 Multi-language support (Gujarati/Hindi).
+- [ ] ☁️ Optional Cloud Sync (Firebase integration).
 
 ---
 
-## 🌟 Key Features
+### 👤 Author
 
-### 1. 🧠 Smart Calculation Engine
-* **Zero-Error Math:** Automatically calculates totals based on live market rates defined in the settings.
-* **Validation:** Prevents entry of invalid sizes that do not match the selected rate card.
+**Akshat Dhanani**
+* Graphic Designer & Web Developer
+* Surat, Gujarat, India
 
-### 2. 📊 Professional Reporting
-* **PDF Generation:** Generates printable, branded PDF reports for billing cycles.
-* **Date Filtering:** Filter reports by specific date ranges (e.g., Weekly Salary or Monthly Audit).
-* **Visual Grouping:** Reports automatically highlight Commercial and Fancy diamonds for easy auditing.
-
-### 3. 🛡️ Data Privacy & Security
-* **100% Offline:** Runs entirely in the browser. No internet connection required after loading.
-* **Client-Side Storage:** Financial data remains exclusively on the client's device.
-* **Backup & Restore:** Full Excel-compatible CSV export/import for device migration.
 
 ---
-
-## 🛠️ Technical Stack
-
-* **Frontend:** HTML5, CSS3 (Modern Flexbox/Grid Layouts)
-* **Logic:** Vanilla JavaScript (ES6+)
-* **Storage:** Browser LocalStorage API
-* **Icons:** FontAwesome Integration
-
----
-
-## 📜 Copyright
-
-**© 2025 Designed & Developed by Akshat Dhanani.**
-All rights reserved.
+*Made with ❤️ for the Diamond Industry.*
